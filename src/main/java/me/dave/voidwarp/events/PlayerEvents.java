@@ -41,11 +41,11 @@ public class PlayerEvents implements Listener {
                 double minDistance = Double.MAX_VALUE;
                 String closestWarp = null;
                 for (String thisWarp : worldData.warps()) {
-                    Location warpLoc = null;
+                    Location warpLoc;
                     try {
                         warpLoc = VoidWarp.essentialsAPI().getWarps().getWarp(thisWarp);
                     } catch (InvalidWorldException | WarpNotFoundException err) {
-                        err.printStackTrace();
+                        continue;
                     }
                     if (warpLoc == null || warpLoc.getWorld() != world) continue;
                     double warpDistance = warpLoc.distanceSquared(playerLoc);
