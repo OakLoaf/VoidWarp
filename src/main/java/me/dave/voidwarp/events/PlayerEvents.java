@@ -47,7 +47,7 @@ public class PlayerEvents implements Listener {
                     } catch (InvalidWorldException | WarpNotFoundException err) {
                         err.printStackTrace();
                     }
-                    if (warpLoc == null) continue;
+                    if (warpLoc == null || warpLoc.getWorld() != world) continue;
                     double warpDistance = warpLoc.distanceSquared(playerLoc);
                     if (warpDistance < minDistance) {
                         minDistance = (warpDistance);
