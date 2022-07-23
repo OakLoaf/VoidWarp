@@ -19,6 +19,7 @@ public class ConfigManager {
     public void reloadConfig() {
         plugin.reloadConfig();
         FileConfiguration config = plugin.getConfig();
+        worldDataMap.clear();
 
         for (Map.Entry<String, Object> entry : config.getValues(false).entrySet()) {
             if (entry.getValue() instanceof ConfigurationSection configurationSection) {
