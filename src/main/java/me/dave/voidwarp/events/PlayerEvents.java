@@ -60,8 +60,10 @@ public class PlayerEvents implements Listener {
                 } catch (InvalidWorldException | WarpNotFoundException err) {
                     err.printStackTrace();
                 }
-                if (closestWarpLoc == null) player.teleport(world.getSpawnLocation());
-                else player.teleport(closestWarpLoc);
+                if (closestWarpLoc == null) {
+                    if (VoidWarp.hasEssentials()) player.teleport((VoidWarp.essentialsSpawnAPI().getSpawn("default")));
+                    else player.teleport(world.getSpawnLocation());
+                } else player.teleport(closestWarpLoc);
             }
         }
     }
