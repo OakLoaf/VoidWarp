@@ -4,8 +4,10 @@ import com.earth2me.essentials.commands.WarpNotFoundException;
 import me.dave.voidwarp.ConfigManager;
 import me.dave.voidwarp.VoidWarp;
 import net.ess3.api.InvalidWorldException;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,10 +26,14 @@ public class PlayerEvents implements Listener {
         if (currYHeight >= worldData.yMax()) return;
 
         switch (worldData.mode()) {
-            case SPAWN -> player.teleport(world.getSpawnLocation());
+            case SPAWN -> {
+                if (VoidWarp.hasEssentials()) player.teleport((VoidWarp.essentialsSpawnAPI().getSpawn("default")));
+                else player.teleport(world.getSpawnLocation());
+            }
             case COMMAND -> {
+                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
                 for (String command : worldData.commands()) {
-                    player.performCommand(command);
+                    Bukkit.dispatchCommand(console, command.toLowerCase().replaceAll("%player%", player.getName()));
                 }
             }
             case WARP -> {

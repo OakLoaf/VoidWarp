@@ -5,3 +5,11 @@ api-version: 1.19
 authors: [ Dav_e_ ]
 description: Teleports you to a specific location, runs a command or warps you to the nearest warp when you go above or below a specified Y level.
 softdepend: [ Essentials ]
+commands:
+  vwreload:
+    description: Reloads the plugin
+    usage: /vwreload
+permissions:
+  voidwarp.admin.reload:
+    description: Allows you to reload the VoidWarp plugin
+    default: op
