@@ -33,6 +33,7 @@ public class ConfigManager {
                 }
                 double yMin = configurationSection.getDouble("yMin", Double.MIN_VALUE);
                 double yMax = configurationSection.getDouble("yMax", Double.MAX_VALUE);
+                String message = configurationSection.getString("displayMessage");
 
                 Collection<String> commands = null;
                 Collection<String> warps = null;
@@ -41,9 +42,9 @@ public class ConfigManager {
                     case WARP -> {
                         if (!VoidWarp.hasEssentials()) {
                             plugin.getLogger().severe("Mode \"WARP\" cannot be used without Essentials");
-                            plugin.getLogger().severe("Disabled VoidWarp in World: " + worldName);
+                            plugin.getLogger().severe("VoidWarp Defaulting to SPAWN in World: " + worldName);
                             plugin.getLogger().severe(configurationSection.getCurrentPath() + ".mode");
-                            continue;
+                            break;
                         }
                         boolean isWhitelist = configurationSection.getBoolean("whitelist");
                         warps = VoidWarp.essentialsAPI().getWarps().getList();
@@ -53,12 +54,12 @@ public class ConfigManager {
                     }
                     case COMMAND -> commands = configurationSection.getStringList("commands");
                 }
-                worldDataMap.put(worldName, new WorldData(mode, yMin, yMax, commands, warps));
+                worldDataMap.put(worldName, new WorldData(mode, yMin, yMax, message, commands, warps));
             }
         }
     }
 
-    public static record WorldData(VoidMode mode, double yMin, double yMax, Collection<String> commands, Collection<String> warps) {}
+    public static record WorldData(VoidMode mode, double yMin, double yMax, String message, Collection<String> commands, Collection<String> warps) {}
 
     public HashMap<String, WorldData> getWorldDataMap() { return worldDataMap; }
 

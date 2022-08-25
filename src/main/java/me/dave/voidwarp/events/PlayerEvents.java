@@ -1,70 +1,49 @@
 package me.dave.voidwarp.events;
 
-import com.earth2me.essentials.commands.WarpNotFoundException;
 import me.dave.voidwarp.ConfigManager;
+import me.dave.voidwarp.VoidMode;
 import me.dave.voidwarp.VoidWarp;
-import net.ess3.api.InvalidWorldException;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
+import me.dave.voidwarp.modes.CommandMode;
+import me.dave.voidwarp.modes.SpawnMode;
+import me.dave.voidwarp.modes.VoidModes;
+import me.dave.voidwarp.modes.WarpMode;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.World;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
+import java.util.HashMap;
+
 public class PlayerEvents implements Listener {
+    private final HashMap<VoidMode, VoidModes> voidModesMap = new HashMap<>();
+
+    public PlayerEvents() {
+        voidModesMap.put(VoidMode.COMMAND, new CommandMode());
+        voidModesMap.put(VoidMode.SPAWN, new SpawnMode());
+        if (VoidWarp.hasEssentials()) voidModesMap.put(VoidMode.WARP, new WarpMode());
+    }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
+        if (player.hasPermission("voidwarp.admin.bypass")) return;
         World world = player.getWorld();
         ConfigManager.WorldData worldData = VoidWarp.configManager.getWorldData(world.getName());
         if (worldData == null) return;
         double currYHeight = player.getLocation().getY();
         if (currYHeight <= worldData.yMin()) return;
         if (currYHeight >= worldData.yMax()) return;
+        String teleportMessage = worldData.message();
+        String teleportLocation = null;
+        VoidModes voidMode = voidModesMap.get(worldData.mode());
+        if (voidMode == null) voidMode = voidModesMap.get(VoidMode.SPAWN);
+        teleportLocation = voidMode.run(player, world, worldData);
 
-        switch (worldData.mode()) {
-            case SPAWN -> {
-                if (VoidWarp.hasEssentials()) player.teleport((VoidWarp.essentialsSpawnAPI().getSpawn("default")));
-                else player.teleport(world.getSpawnLocation());
-            }
-            case COMMAND -> {
-                ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-                for (String command : worldData.commands()) {
-                    Bukkit.dispatchCommand(console, command.toLowerCase().replaceAll("%player%", player.getName()));
-                }
-            }
-            case WARP -> {
-                Location playerLoc = player.getLocation();
-                double minDistance = Double.MAX_VALUE;
-                String closestWarp = null;
-                for (String thisWarp : worldData.warps()) {
-                    Location warpLoc;
-                    try {
-                        warpLoc = VoidWarp.essentialsAPI().getWarps().getWarp(thisWarp);
-                    } catch (InvalidWorldException | WarpNotFoundException err) {
-                        continue;
-                    }
-                    if (warpLoc == null || warpLoc.getWorld() != world) continue;
-                    double warpDistance = warpLoc.distanceSquared(playerLoc);
-                    if (warpDistance < minDistance) {
-                        minDistance = (warpDistance);
-                        closestWarp = thisWarp;
-                    }
-                }
-                Location closestWarpLoc = null;
-                try {
-                     closestWarpLoc = VoidWarp.essentialsAPI().getWarps().getWarp(closestWarp);
-                } catch (InvalidWorldException | WarpNotFoundException err) {
-                    err.printStackTrace();
-                }
-                if (closestWarpLoc == null) {
-                    if (VoidWarp.hasEssentials()) player.teleport((VoidWarp.essentialsSpawnAPI().getSpawn("default")));
-                    else player.teleport(world.getSpawnLocation());
-                } else player.teleport(closestWarpLoc);
-            }
-        }
+        Audience audience = VoidWarp.getBukkitAudiences().sender(player);
+        if (teleportLocation != null) teleportMessage = teleportMessage.replaceAll("%location%", teleportLocation);
+        if (teleportMessage != null) audience.sendActionBar(MiniMessage.miniMessage().deserialize(teleportMessage));
     }
 }
