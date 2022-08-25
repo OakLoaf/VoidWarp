@@ -15,10 +15,10 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.HashMap;
+import java.util.EnumMap;
 
 public class PlayerEvents implements Listener {
-    private final HashMap<VoidMode, VoidModes> voidModesMap = new HashMap<>();
+    private final EnumMap<VoidMode, VoidModes> voidModesMap = new EnumMap<>(VoidMode.class);
 
     public PlayerEvents() {
         voidModesMap.put(VoidMode.COMMAND, new CommandMode());
