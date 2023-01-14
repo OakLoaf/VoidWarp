@@ -59,7 +59,7 @@ public class ConfigManager {
         }
     }
 
-    public static record WorldData(VoidMode mode, double yMin, double yMax, String message, Collection<String> commands, Collection<String> warps) {}
+    public record WorldData(VoidMode mode, double yMin, double yMax, String message, Collection<String> commands, Collection<String> warps) {}
 
     public HashMap<String, WorldData> getWorldDataMap() { return worldDataMap; }
 
