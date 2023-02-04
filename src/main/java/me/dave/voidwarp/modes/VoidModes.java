@@ -4,6 +4,8 @@ import me.dave.voidwarp.ConfigManager;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.concurrent.CompletableFuture;
+
 public interface VoidModes {
-    String run(Player player, World world, ConfigManager.WorldData worldData);
+    CompletableFuture<String> run(Player player, World world, ConfigManager.WorldData worldData);
 }

@@ -1,11 +1,16 @@
 package me.dave.voidwarp;
 
+import com.earth2me.essentials.Essentials;
+import me.dave.voidwarp.apis.EssentialsHook;
+import me.dave.voidwarp.apis.HuskHomesHook;
+import me.dave.voidwarp.modes.VoidMode;
+import net.william278.huskhomes.api.HuskHomesAPI;
+import net.william278.huskhomes.position.Warp;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class ConfigManager {
     private final VoidWarp plugin = VoidWarp.getInstance();
@@ -40,18 +45,80 @@ public class ConfigManager {
 
                 switch (mode) {
                     case WARP -> {
-                        if (!VoidWarp.hasEssentials()) {
-                            plugin.getLogger().severe("Mode \"WARP\" cannot be used without Essentials");
+                        HuskHomesHook huskHomesAPI = VoidWarp.huskHomesAPI();
+                        EssentialsHook essentialsAPI = VoidWarp.essentialsAPI();
+
+                        if (huskHomesAPI == null && essentialsAPI == null) {
+                            plugin.getLogger().severe("Mode \"WARP\" needs either HuskHomes or Essentials to function");
                             plugin.getLogger().severe("VoidWarp Defaulting to SPAWN in World: " + worldName);
                             plugin.getLogger().severe(configurationSection.getCurrentPath() + ".mode");
                             break;
                         }
-                        boolean isWhitelist = configurationSection.getBoolean("whitelist");
-                        warps = VoidWarp.essentialsAPI().getWarps().getList();
+
                         Collection<String> warpConfigList = configurationSection.getStringList("warps");
+                        boolean isWhitelist = configurationSection.getBoolean("whitelist");
+
+                        if (huskHomesAPI != null) {
+                            huskHomesAPI.getWarps().thenAccept((huskWarps) -> {
+                                Collection<String> warpCollection = huskWarps;
+
+                                if (warpCollection.size() == 0) warpCollection = VoidWarp.essentialsAPI().getWarps();
+
+                                if (isWhitelist) warpCollection = warpConfigList;
+                                else warpCollection.removeAll(warpConfigList);
+                                worldDataMap.put(worldName, new WorldData(mode, yMin, yMax, message, null, warpCollection));
+                            });
+                            return;
+                        }
+
+                        warps = VoidWarp.essentialsAPI().getWarps();
                         if (isWhitelist) warps = warpConfigList;
                         else warps.removeAll(warpConfigList);
                     }
+
+                    case ESSENTIALS_WARP -> {
+                        EssentialsHook essentialsAPI = VoidWarp.essentialsAPI();
+
+                        if (essentialsAPI == null) {
+                            plugin.getLogger().severe("Mode \"ESSENTIALS_WARP\" needs Essentials to function");
+                            plugin.getLogger().severe("VoidWarp Defaulting to SPAWN in World: " + worldName);
+                            plugin.getLogger().severe(configurationSection.getCurrentPath() + ".mode");
+                            break;
+                        }
+
+                        Collection<String> warpConfigList = configurationSection.getStringList("warps");
+                        boolean isWhitelist = configurationSection.getBoolean("whitelist");
+
+                        warps = VoidWarp.essentialsAPI().getWarps();
+                        if (isWhitelist) warps = warpConfigList;
+                        else warps.removeAll(warpConfigList);
+                    }
+
+                    case HUSKHOME_WARP -> {
+                        HuskHomesHook huskHomesAPI = VoidWarp.huskHomesAPI();
+
+                        if (huskHomesAPI == null) {
+                            plugin.getLogger().severe("Mode \"HUSKHOME_WARP\" needs HuskHomes to function");
+                            plugin.getLogger().severe("VoidWarp Defaulting to SPAWN in World: " + worldName);
+                            plugin.getLogger().severe(configurationSection.getCurrentPath() + ".mode");
+                            break;
+                        }
+
+                        Collection<String> warpConfigList = configurationSection.getStringList("warps");
+                        boolean isWhitelist = configurationSection.getBoolean("whitelist");
+
+                        huskHomesAPI.getWarps().thenAccept((huskWarps) -> {
+                            Collection<String> warpCollection = huskWarps;
+
+                            if (warpCollection.size() == 0) warpCollection = VoidWarp.essentialsAPI().getWarps();
+
+                            if (isWhitelist) warpCollection = warpConfigList;
+                            else warpCollection.removeAll(warpConfigList);
+                            worldDataMap.put(worldName, new WorldData(mode, yMin, yMax, message, null, warpCollection));
+                        });
+                        return;
+                    }
+
                     case COMMAND -> commands = configurationSection.getStringList("commands");
                 }
                 worldDataMap.put(worldName, new WorldData(mode, yMin, yMax, message, commands, warps));
