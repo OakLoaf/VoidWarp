@@ -1,16 +1,12 @@
 package me.dave.voidwarp;
 
-import com.earth2me.essentials.Essentials;
 import me.dave.voidwarp.apis.EssentialsHook;
 import me.dave.voidwarp.apis.HuskHomesHook;
 import me.dave.voidwarp.modes.VoidMode;
-import net.william278.huskhomes.api.HuskHomesAPI;
-import net.william278.huskhomes.position.Warp;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 
 public class ConfigManager {
     private final VoidWarp plugin = VoidWarp.getInstance();
@@ -38,7 +34,7 @@ public class ConfigManager {
                 }
                 double yMin = configurationSection.getDouble("yMin", Double.MIN_VALUE);
                 double yMax = configurationSection.getDouble("yMax", Double.MAX_VALUE);
-                String message = configurationSection.getString("displayMessage");
+                String message = configurationSection.getString("displayMessage", "<grey>Teleported to <gold>%location%</gold>.");
 
                 Collection<String> commands = null;
                 Collection<String> warps = null;

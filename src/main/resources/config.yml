@@ -9,6 +9,8 @@ world:
   yMin: -120
   # yMax: The Y coordinate at the top of the range (Leave empty to have no maximum)
   yMax: 5
+  # displayMessage: The message that is displayed in chat when you are teleported
+  displayMessage: "<grey>Teleported to <gold>%location%</gold>."
   # commands: Commands to be ran when in the region (Note: Only valid if mode is "COMMAND") (COMMANDS CURRENTLY ONLY RAN AS PLAYER)
   commands: [ ]
   # warps: A list of warps (Note: Only valid if mode is "WARP", "ESSENTIALS_WARP" OR "HUSKHOME_WARP")
