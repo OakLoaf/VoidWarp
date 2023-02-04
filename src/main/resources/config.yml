@@ -3,7 +3,7 @@
 ############################
 
 world:
-  # mode: The mode to use when the player is in the region (SPAWN/COMMAND/WARP)
+  # mode: The mode to use when the player is in the region (SPAWN/COMMAND/WARP/ESSENTIALS_WARP/HUSKHOME_WARP)
   mode: SPAWN
   # yMin: The Y coordinate at the bottom of the range (Leave empty to have no minimum)
   yMin: -120
@@ -11,7 +11,7 @@ world:
   yMax: 5
   # commands: Commands to be ran when in the region (Note: Only valid if mode is "COMMAND") (COMMANDS CURRENTLY ONLY RAN AS PLAYER)
   commands: [ ]
-  # warps: A list of warps (Note: Only valid if mode is "WARP")
+  # warps: A list of warps (Note: Only valid if mode is "WARP", "ESSENTIALS_WARP" OR "HUSKHOME_WARP")
   warps: [ ]
   # whitelist: Sets whether the warps list is a whitelist or blacklist (Note: Only valid if mode is "WARP")
   whitelist: true
