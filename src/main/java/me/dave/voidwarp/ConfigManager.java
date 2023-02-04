@@ -32,7 +32,7 @@ public class ConfigManager {
                     err.printStackTrace();
                     continue;
                 }
-                double yMin = configurationSection.getDouble("yMin", Double.MIN_VALUE);
+                double yMin = configurationSection.getDouble("yMin", -Double.MAX_VALUE);
                 double yMax = configurationSection.getDouble("yMax", Double.MAX_VALUE);
                 String message = configurationSection.getString("displayMessage", "<grey>Teleported to <gold>%location%</gold>.");
 
