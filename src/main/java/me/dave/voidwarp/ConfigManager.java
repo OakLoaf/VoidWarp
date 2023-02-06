@@ -34,7 +34,7 @@ public class ConfigManager {
                 }
                 double yMin = configurationSection.getDouble("yMin", -Double.MAX_VALUE);
                 double yMax = configurationSection.getDouble("yMax", Double.MAX_VALUE);
-                String message = configurationSection.getString("displayMessage", "<grey>Teleported to <gold>%location%</gold>.");
+                String message = configurationSection.getString("message", "<grey>Teleported to <yellow>%location%</yellow>.");
 
                 Collection<String> commands = null;
                 Collection<String> warps = null;
