@@ -34,7 +34,12 @@ public class ConfigManager {
                 }
                 double yMin = configurationSection.getDouble("yMin", -Double.MAX_VALUE);
                 double yMax = configurationSection.getDouble("yMax", Double.MAX_VALUE);
-                String message = configurationSection.getString("message", "<grey>Teleported to <yellow>%location%</yellow>.");
+                String message = configurationSection.getString("message");
+                // TODO: Remove compatibility for displayMessage in next large update
+                if (message == null) {
+                    configurationSection.getString("displayMessage", "<grey>Teleported to <yellow>%location%</yellow>.");
+                    plugin.getLogger().severe("You are using an out of date config option. Please change all occurrences of \"displayMessage\" with \"message\"");
+                }
 
                 Collection<String> commands = null;
                 Collection<String> warps = null;
