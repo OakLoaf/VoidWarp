@@ -1,5 +1,6 @@
 package me.dave.voidwarp.events;
 
+import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.voidwarp.ConfigManager;
 import me.dave.voidwarp.modes.VoidMode;
 import me.dave.voidwarp.VoidWarp;
@@ -7,8 +8,6 @@ import me.dave.voidwarp.modes.CommandMode;
 import me.dave.voidwarp.modes.SpawnMode;
 import me.dave.voidwarp.modes.VoidModes;
 import me.dave.voidwarp.modes.WarpMode;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,11 +45,10 @@ public class PlayerEvents implements Listener {
         String teleportMessage = worldData.message();
         CompletableFuture<String> teleportLocation = voidMode.run(player, world, worldData);
 
-        Audience audience = VoidWarp.getBukkitAudiences().sender(player);
         teleportLocation.thenAccept(location -> {
             String message = null;
             if (location != null) message = teleportMessage.replaceAll("%location%", location);
-            if (message != null) audience.sendActionBar(MiniMessage.miniMessage().deserialize(message));
+            if (message != null) ChatColorHandler.sendActionBarMessage(player, message);
         });
     }
 }

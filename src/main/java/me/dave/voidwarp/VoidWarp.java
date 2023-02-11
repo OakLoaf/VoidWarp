@@ -5,13 +5,11 @@ import me.dave.voidwarp.apis.EssentialsSpawnHook;
 import me.dave.voidwarp.apis.HuskHomesHook;
 import me.dave.voidwarp.commands.ReloadCmd;
 import me.dave.voidwarp.events.PlayerEvents;
-import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class VoidWarp extends JavaPlugin {
     private static VoidWarp plugin;
-    private static BukkitAudiences bukkitAudiences;
     public static ConfigManager configManager;
     private static EssentialsHook essentials = null;
     private static EssentialsSpawnHook essentialsSpawn = null;
@@ -20,7 +18,6 @@ public final class VoidWarp extends JavaPlugin {
     @Override
     public void onEnable() {
         plugin = this;
-        bukkitAudiences = BukkitAudiences.create(this);
 
         PluginManager pluginManager = getServer().getPluginManager();
         if (pluginManager.getPlugin("Essentials") != null) essentials = new EssentialsHook();
@@ -41,10 +38,6 @@ public final class VoidWarp extends JavaPlugin {
 
     public static VoidWarp getInstance() {
         return plugin;
-    }
-
-    public static BukkitAudiences getBukkitAudiences() {
-        return bukkitAudiences;
     }
 
     public static EssentialsHook essentialsAPI() {

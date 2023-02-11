@@ -1,24 +1,21 @@
 package me.dave.voidwarp.commands;
 
+import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.voidwarp.VoidWarp;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
 
 public class ReloadCmd implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        Audience audience = VoidWarp.getBukkitAudiences().sender(sender);
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!sender.hasPermission("voidwarp.admin.reload")) {
-            audience.sendMessage(MiniMessage.miniMessage().deserialize("<red>You have insufficient permissions "));
+            sender.sendMessage(ChatColorHandler.translateAlternateColorCodes("&cYou have insufficient permissions."));
             return true;
         }
         VoidWarp.configManager.reloadConfig();
-        audience.sendMessage(MiniMessage.miniMessage().deserialize("<green>Reloaded VoidWarp"));
+        sender.sendMessage(ChatColorHandler.translateAlternateColorCodes("&aReloaded VoidWarp"));
         return true;
     }
 }

@@ -11,7 +11,7 @@ world:
   yMax: 0
   # message: The message that is displayed in chat when you are teleported
   message: "<grey>Teleported to <yellow>%location%</yellow>."
-  # commands: Commands to be ran when in the region (Note: Only valid if mode is "COMMAND") (COMMANDS CURRENTLY ONLY RAN AS PLAYER)
+  # commands: Commands ran when in the region (Note: Only valid if mode is "COMMAND") (COMMANDS CURRENTLY ONLY RAN AS PLAYER)
   commands: [ ]
   # warps: A list of warps (Note: Only valid if mode is "WARP", "ESSENTIALS_WARP" OR "HUSKHOME_WARP")
   warps: [ ]
