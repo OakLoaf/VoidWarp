@@ -4,7 +4,6 @@ import me.dave.voidwarp.VoidWarp;
 import me.dave.voidwarp.apis.EssentialsHook;
 import me.dave.voidwarp.apis.HuskHomesHook;
 import me.dave.voidwarp.data.WarpData;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;

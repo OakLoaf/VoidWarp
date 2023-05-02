@@ -30,20 +30,6 @@ public class HuskHomesHook {
         return completableFuture;
     }
 
-    public CompletableFuture<Warp> getWarp(String warpName) {
-        CompletableFuture<Warp> completableFuture = new CompletableFuture<>();
-
-        huskHomes.getWarp(warpName).thenAccept((warp) -> {
-            if (warp.isEmpty()) {
-                completableFuture.complete(null);
-                return;
-            }
-            completableFuture.complete(warp.get());
-        });
-
-        return completableFuture;
-    }
-
     public CompletableFuture<WarpData> getClosestWarp(Player player, Collection<String> warps) {
         CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
 

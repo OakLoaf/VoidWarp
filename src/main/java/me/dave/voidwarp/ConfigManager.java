@@ -141,7 +141,5 @@ public class ConfigManager {
 
     public record WorldData(VoidMode mode, double yMin, double yMax, String message, Collection<String> commands, Collection<String> warps) {}
 
-    public HashMap<String, WorldData> getWorldDataMap() { return worldDataMap; }
-
     public WorldData getWorldData(String worldName) { return worldDataMap.get(worldName); }
 }
