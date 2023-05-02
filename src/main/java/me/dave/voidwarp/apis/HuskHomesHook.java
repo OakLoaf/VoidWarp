@@ -1,18 +1,17 @@
 package me.dave.voidwarp.apis;
 
-import me.dave.voidwarp.modes.WarpMode;
+import me.dave.voidwarp.data.WarpData;
 import net.william278.huskhomes.api.HuskHomesAPI;
 import net.william278.huskhomes.position.Position;
 import net.william278.huskhomes.position.Warp;
+import net.william278.huskhomes.teleport.TeleportationException;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class HuskHomesHook {
     private final HuskHomesAPI huskHomes = HuskHomesAPI.getInstance();
@@ -23,7 +22,7 @@ public class HuskHomesHook {
         huskHomes.getWarps().thenAccept((warps) -> {
             List<String> outputWarps = new ArrayList<>();
             for (Warp warp : warps) {
-                outputWarps.add(warp.meta.name);
+                outputWarps.add(warp.getName());
             }
             completableFuture.complete(outputWarps);
         });
@@ -45,44 +44,31 @@ public class HuskHomesHook {
         return completableFuture;
     }
 
-    public WarpMode.WarpData getClosestWarp(Player player, World world, Collection<String> warps) {
-        List<CompletableFuture<Warp>> futureList = new ArrayList<>();
-
-        for (String warpName : warps) {
-            CompletableFuture<Warp> warpFuture = getWarp(warpName);
-            futureList.add(warpFuture);
-        }
-
-        CompletableFuture<Void> combinedFuture = CompletableFuture.allOf(futureList.toArray(new CompletableFuture[0]));
-        try {
-            combinedFuture.get();
-        } catch (ExecutionException | InterruptedException err) {
-            throw new RuntimeException(err);
-        }
+    public CompletableFuture<WarpData> getClosestWarp(Player player, Collection<String> warps) {
+        CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
 
         Location playerLoc = player.getLocation();
-        double minDistance = Double.MAX_VALUE;
-        WarpMode.WarpData closestWarp = null;
 
-        for (CompletableFuture<Warp> future : futureList) {
-            assert(future.isDone());
+        huskHomes.getLocalWarps().thenAccept(huskWarps -> {
+            huskWarps = huskWarps.stream().filter(warp -> warps.contains(warp.getName())).toList();
 
-            try {
-                Warp warp = future.get();
+            double minDistance = Double.MAX_VALUE;
+            WarpData closestWarp = null;
+            for (Warp warp : huskWarps) {
                 if (warp == null) continue;
                 Location warpLoc = huskHomes.getLocation(warp);
-                if (warpLoc == null || warpLoc.getWorld() != world) continue;
+                if (warpLoc == null || warpLoc.getWorld() != playerLoc.getWorld()) continue;
                 double warpDistance = warpLoc.distanceSquared(playerLoc);
                 if (warpDistance < minDistance) {
                     minDistance = (warpDistance);
-                    closestWarp = new WarpMode.WarpData(warp.meta.name, warpLoc);
+                    closestWarp = new WarpData(warp.getName(), warpLoc);
                 }
-            } catch (InterruptedException | ExecutionException err) {
-                throw new RuntimeException(err);
             }
-        }
 
-        return closestWarp;
+            completableFuture.complete(closestWarp);
+        });
+
+        return completableFuture;
     }
 
     public CompletableFuture<Position> getSpawn() {
@@ -102,15 +88,19 @@ public class HuskHomesHook {
     public CompletableFuture<Boolean> teleportPlayer(Player player, Position position) {
         CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
 
-        huskHomes.teleportBuilder(huskHomes.adaptUser(player))
-            .setTarget(position)
-            .toTeleport()
-            .thenAccept(teleport -> teleport.execute()
-                .thenAccept(tpResult -> {
-                    completableFuture.complete(tpResult.successful());
-                })
-            );
+        boolean success = false;
+        try {
+            huskHomes.teleportBuilder(huskHomes.adaptUser(player))
+                .target(position)
+                .toTeleport()
+                .execute();
 
+            success = true;
+        } catch(TeleportationException exc) {
+            exc.printStackTrace();
+        }
+
+        completableFuture.complete(success);
         return completableFuture;
     }
 }

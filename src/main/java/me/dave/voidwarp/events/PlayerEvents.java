@@ -2,12 +2,10 @@ package me.dave.voidwarp.events;
 
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.voidwarp.ConfigManager;
-import me.dave.voidwarp.modes.VoidMode;
+import me.dave.voidwarp.data.VoidMode;
+import me.dave.voidwarp.data.VoidModes;
+import me.dave.voidwarp.modes.*;
 import me.dave.voidwarp.VoidWarp;
-import me.dave.voidwarp.modes.CommandMode;
-import me.dave.voidwarp.modes.SpawnMode;
-import me.dave.voidwarp.modes.VoidModes;
-import me.dave.voidwarp.modes.WarpMode;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,8 +22,9 @@ public class PlayerEvents implements Listener {
         voidModesMap.put(VoidMode.COMMAND, new CommandMode());
         voidModesMap.put(VoidMode.SPAWN, new SpawnMode());
         if (VoidWarp.essentialsAPI() != null || VoidWarp.huskHomesAPI() != null) voidModesMap.put(VoidMode.WARP, new WarpMode());
-        if (VoidWarp.essentialsAPI() != null) voidModesMap.put(VoidMode.ESSENTIALS_WARP, new WarpMode());
-        if (VoidWarp.huskHomesAPI() != null) voidModesMap.put(VoidMode.HUSKHOME_WARP, new WarpMode());
+        if (VoidWarp.essentialsAPI() != null) voidModesMap.put(VoidMode.ESSENTIALS_WARP, new EssentialsWarpMode());
+        if (VoidWarp.huskHomesAPI() != null) voidModesMap.put(VoidMode.HUSKHOMES_WARP, new HuskWarpMode());
+        if (VoidWarp.warpSystemAPI() != null) voidModesMap.put(VoidMode.WARPSYSTEM_WARP, new WarpSystemWarpMode());
     }
 
     @EventHandler
@@ -43,7 +42,7 @@ public class PlayerEvents implements Listener {
         if (voidMode == null) voidMode = voidModesMap.get(VoidMode.SPAWN);
 
         String teleportMessage = worldData.message();
-        CompletableFuture<String> teleportLocation = voidMode.run(player, world, worldData);
+        CompletableFuture<String> teleportLocation = voidMode.run(player, worldData);
 
         teleportLocation.thenAccept(location -> {
             String message = null;

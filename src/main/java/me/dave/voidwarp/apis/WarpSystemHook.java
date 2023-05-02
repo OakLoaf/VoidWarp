@@ -1,43 +1,39 @@
 package me.dave.voidwarp.apis;
 
-import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.commands.WarpNotFoundException;
+import de.codingair.warpsystem.api.ITeleportManager;
+import de.codingair.warpsystem.api.TeleportService;
 import me.dave.voidwarp.data.WarpData;
-import net.ess3.api.InvalidWorldException;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
-public class EssentialsHook {
-    private final Essentials essentials;
+public class WarpSystemHook {
+    private final ITeleportManager warpSystem;
 
-    public EssentialsHook() {
-        essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+    public WarpSystemHook() {
+        warpSystem = TeleportService.get();
     }
 
     public Collection<String> getWarps() {
-        return essentials.getWarps().getList();
+        return new ArrayList<>(warpSystem.simpleWarps());
     }
 
     public Location getWarp(String warpName) {
-        try {
-            if (essentials.getWarps() == null) return null;
-            return essentials.getWarps().getWarp(warpName);
-        } catch (InvalidWorldException | WarpNotFoundException err) {
-            return null;
-        }
+        return warpSystem.simpleWarp(warpName);
     }
 
     public WarpData getClosestWarp(Player player, Collection<String> warps) {
         Location playerLoc = player.getLocation();
+        World world = playerLoc.getWorld();
         double minDistance = Double.MAX_VALUE;
         String closestWarp = null;
 
         for (String thisWarp : warps) {
             Location warpLoc = getWarp(thisWarp);
-            if (warpLoc == null || warpLoc.getWorld() != playerLoc.getWorld()) continue;
+            if (warpLoc == null || warpLoc.getWorld() != world) continue;
             double warpDistance = warpLoc.distanceSquared(playerLoc);
             if (warpDistance < minDistance) {
                 minDistance = (warpDistance);

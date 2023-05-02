@@ -1,21 +1,21 @@
 package me.dave.voidwarp.modes;
 
 import me.dave.voidwarp.VoidWarp;
-import me.dave.voidwarp.apis.EssentialsHook;
+import me.dave.voidwarp.apis.WarpSystemHook;
 import me.dave.voidwarp.data.WarpData;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class EssentialsWarpMode extends AbstractWarpMode {
+public class WarpSystemWarpMode extends AbstractWarpMode {
 
     @Override
     public CompletableFuture<WarpData> getClosestWarp(Player player, Collection<String> warps) {
         CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
-        EssentialsHook essentials = VoidWarp.essentialsAPI();
-        if (essentials == null) completableFuture.complete(null);
-        else completableFuture.complete(essentials.getClosestWarp(player, warps));
+        WarpSystemHook warpSystemAPI = VoidWarp.warpSystemAPI();
+        if (warpSystemAPI == null) return null;
+        else completableFuture.complete(warpSystemAPI.getClosestWarp(player, warps));
 
         return completableFuture;
     }

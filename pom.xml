@@ -87,24 +87,40 @@
         <dependency>
             <groupId>com.github.CoolDCB</groupId>
             <artifactId>ChatColorHandler</artifactId>
-            <version>v1.2.3</version>
+            <version>v1.2.4</version>
         </dependency>
+        <!-- Essentials Plugin API -->
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>EssentialsX</artifactId>
             <version>2.18.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- EssentialsSpawn Plugin API -->
         <dependency>
             <groupId>net.ess3</groupId>
             <artifactId>EssentialsXSpawn</artifactId>
             <version>2.18.1</version>
             <scope>provided</scope>
         </dependency>
+        <!-- HuskHomes Plugin API -->
         <dependency>
             <groupId>net.william278</groupId>
             <artifactId>HuskHomes2</artifactId>
-            <version>3.2.1</version>
+            <version>4.1.1</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- WarpSystem Plugin API -->
+        <dependency>
+            <groupId>com.github.CodingAir</groupId>
+            <artifactId>WarpSystem-API</artifactId>
+            <version>5.1.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.CodingAir</groupId>
+            <artifactId>CodingAPI</artifactId>
+            <version>1.64</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

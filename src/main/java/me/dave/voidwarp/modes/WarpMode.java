@@ -1,56 +1,56 @@
 package me.dave.voidwarp.modes;
 
-import me.dave.voidwarp.ConfigManager.WorldData;
 import me.dave.voidwarp.VoidWarp;
 import me.dave.voidwarp.apis.EssentialsHook;
 import me.dave.voidwarp.apis.HuskHomesHook;
+import me.dave.voidwarp.data.WarpData;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
 
-public class WarpMode implements VoidModes {
+public class WarpMode extends AbstractWarpMode {
 
-    public CompletableFuture<String> run(Player player, World world, WorldData worldData) {
-        CompletableFuture<String> completableFuture = new CompletableFuture<>();
+    @Override
+    public CompletableFuture<WarpData> getClosestWarp(Player player, Collection<String> warps) {
+        CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
 
-        WarpData closestWarp = huskHomeGetClosestWarp(player, world, worldData.warps());
-        if (closestWarp == null) {
-            closestWarp = essentialsGetClosestWarp(player, world, worldData.warps());
-        }
-        if (closestWarp == null) {
-            closestWarp = new WarpData("Spawn", world.getSpawnLocation());
-        }
+        huskHomeGetClosestWarp(player, warps).thenAccept(closestWarp -> {
+            if (closestWarp == null) {
+                closestWarp = warpSystemGetClosestWarp(player, warps);
 
-        if (player.teleport(closestWarp.location)) completableFuture.complete(closestWarp.name);
-        else completableFuture.complete(null);
+                if (closestWarp == null) {
+                    closestWarp = essentialsGetClosestWarp(player, warps);
+
+                    if (closestWarp == null) {
+                        closestWarp = new WarpData("Spawn", player.getWorld().getSpawnLocation());
+                    }
+                }
+            }
+            completableFuture.complete(closestWarp);
+        });
 
         return completableFuture;
     }
 
-    private WarpData essentialsGetClosestWarp(Player player, World world, Collection<String> warps) {
+    private WarpData essentialsGetClosestWarp(Player player, Collection<String> warps) {
         EssentialsHook essentials = VoidWarp.essentialsAPI();
         if (essentials == null) return null;
-
-        return essentials.getClosestWarp(player, world, warps);
+        return essentials.getClosestWarp(player, warps);
     }
 
-    private WarpData huskHomeGetClosestWarp(Player player, World world, Collection<String> warps) {
+    private CompletableFuture<WarpData> huskHomeGetClosestWarp(Player player, Collection<String> warps) {
+        CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
         HuskHomesHook huskHomesAPI = VoidWarp.huskHomesAPI();
-        if (huskHomesAPI == null) return null;
+        if (huskHomesAPI == null) completableFuture.complete(null);
+        else huskHomesAPI.getClosestWarp(player, warps).thenAccept(completableFuture::complete);
 
-        return huskHomesAPI.getClosestWarp(player, world, warps);
+        return completableFuture;
     }
 
-    public record WarpData(String name, Location location) {
-        public String getName() {
-            return name;
-        }
-
-        public Location getLocation() {
-            return location;
-        }
+    private WarpData warpSystemGetClosestWarp(Player player, Collection<String> warps) {
+        if (VoidWarp.warpSystemAPI() == null) return null;
+        return VoidWarp.warpSystemAPI().getClosestWarp(player, warps);
     }
 }
