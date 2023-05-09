@@ -19,28 +19,13 @@ abstract class AbstractWarpMode implements VoidModes {
     public abstract CompletableFuture<WarpData> getClosestWarp(Player player, Collection<String> warps);
 
     /**
-     * Teleport a player to the closest warp to them
-     *
-     * @param player Player to teleport
-     * @param warp Warp to teleport to
-     */
-    public CompletableFuture<Boolean> teleport(Player player, WarpData warp) {
-        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
-
-        if (warp == null) completableFuture.complete(false);
-        else completableFuture.complete(player.teleport(warp.getLocation()));
-
-        return completableFuture;
-    }
-
-    /**
-     * Teleport a player to the closest warp to them
+     * Get the warp data for the closest warp to the player
      *
      * @param player Player to teleport
      * @param worldData Relevant world data
      */
-    public CompletableFuture<String> run(Player player, ConfigManager.WorldData worldData) {
-        CompletableFuture<String> completableFuture = new CompletableFuture<>();
+    public CompletableFuture<WarpData> getWarpData(Player player, ConfigManager.WorldData worldData) {
+        CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
 
         if (worldData.warps().size() == 0) {
             completableFuture.complete(null);
@@ -48,13 +33,8 @@ abstract class AbstractWarpMode implements VoidModes {
         }
 
         getClosestWarp(player, worldData.warps()).thenAccept(warp -> {
-            if (warp == null) warp = new WarpData("Spawn", player.getWorld().getSpawnLocation());
-            final WarpData finalWarp = warp;
-
-            teleport(player, warp).thenAccept(teleported -> {
-                if (teleported) completableFuture.complete(finalWarp.getName());
-                else completableFuture.complete(null);
-            });
+            if (warp == null) completableFuture.complete(new WarpData("Spawn", player.getWorld().getSpawnLocation()));
+            else completableFuture.complete(warp);
         });
 
         return completableFuture;

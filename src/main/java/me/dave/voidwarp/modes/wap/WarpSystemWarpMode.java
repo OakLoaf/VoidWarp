@@ -14,7 +14,7 @@ public class WarpSystemWarpMode extends AbstractWarpMode {
     public CompletableFuture<WarpData> getClosestWarp(Player player, Collection<String> warps) {
         CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
         WarpSystemHook warpSystemAPI = VoidWarp.warpSystemAPI();
-        if (warpSystemAPI == null) return null;
+        if (warpSystemAPI == null) completableFuture.complete(null);
         else completableFuture.complete(warpSystemAPI.getClosestWarp(player, warps));
 
         return completableFuture;

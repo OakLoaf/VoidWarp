@@ -6,5 +6,5 @@ import org.bukkit.entity.Player;
 import java.util.concurrent.CompletableFuture;
 
 public interface VoidModes {
-    CompletableFuture<String> run(Player player, ConfigManager.WorldData worldData);
+    CompletableFuture<WarpData> getWarpData(Player player, ConfigManager.WorldData worldData);
 }

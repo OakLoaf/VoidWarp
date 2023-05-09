@@ -10,6 +10,8 @@ import me.dave.voidwarp.modes.wap.EssentialsWarpMode;
 import me.dave.voidwarp.modes.wap.HuskWarpMode;
 import me.dave.voidwarp.modes.wap.WarpMode;
 import me.dave.voidwarp.modes.wap.WarpSystemWarpMode;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,10 +19,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.EnumMap;
-import java.util.concurrent.CompletableFuture;
+import java.util.HashSet;
+import java.util.UUID;
 
 public class PlayerEvents implements Listener {
     private final EnumMap<VoidMode, VoidModes> voidModesMap = new EnumMap<>(VoidMode.class);
+    private final HashSet<UUID> processingList = new HashSet<>();
 
     public PlayerEvents() {
         voidModesMap.put(VoidMode.COMMAND, new CommandMode());
@@ -34,24 +38,47 @@ public class PlayerEvents implements Listener {
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
+        // Checks if player bypasses VoidWarp
         if (player.hasPermission("voidwarp.admin.bypass")) return;
+        // Checks if player teleportation is currently being processed
+        if (processingList.contains(player.getUniqueId())) return;
+
+        // Gets and checks this world's WorldData
         World world = player.getWorld();
         ConfigManager.WorldData worldData = VoidWarp.configManager.getWorldData(world.getName());
         if (worldData == null) return;
+
+        // Checks if the player is within the set height range
         double currYHeight = player.getLocation().getY();
         if (currYHeight <= worldData.yMin()) return;
         if (currYHeight >= worldData.yMax()) return;
 
+        // Gets the world's VoidMode, if it fails then it will default to Spawn
         VoidModes voidMode = voidModesMap.get(worldData.mode());
         if (voidMode == null) voidMode = voidModesMap.get(VoidMode.SPAWN);
 
-        String teleportMessage = worldData.message();
-        CompletableFuture<String> teleportLocation = voidMode.run(player, worldData);
+        // Attempts to teleport the player using the specified VoidMode
+        UUID playerUUID = player.getUniqueId();
+        processingList.add(playerUUID);
+        voidMode.getWarpData(player, worldData).thenAccept(warpData -> {
+            // Teleports the player if a location is provided
+            Location location = warpData.getLocation();
+            if (location != null) player.teleport(location);
 
-        teleportLocation.thenAccept(location -> {
+            // Executes runnable actions
+            Runnable runnable = warpData.getRunnable();
+            if (runnable != null) runnable.run();
+
+            // Creates and sends Action Bar message
             String message = null;
-            if (location != null) message = teleportMessage.replaceAll("%location%", location);
+            String destinationName = warpData.getName();
+            if (destinationName != null) message = worldData.message().replaceAll("%location%", destinationName);
             if (message != null) ChatColorHandler.sendActionBarMessage(player, message);
+
+            // Remove the player from the processing list
+            processingList.remove(playerUUID);
         });
+
+        // TODO: Create some form of backup that removes the player if for whatever reason they aren't removed
     }
 }

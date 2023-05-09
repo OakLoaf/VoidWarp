@@ -5,6 +5,8 @@ import me.dave.voidwarp.VoidWarp;
 import me.dave.voidwarp.apis.EssentialsSpawnHook;
 import me.dave.voidwarp.apis.HuskHomesHook;
 import me.dave.voidwarp.data.VoidModes;
+import me.dave.voidwarp.data.WarpData;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -12,39 +14,38 @@ import java.util.concurrent.CompletableFuture;
 
 public class SpawnMode implements VoidModes {
 
-    public CompletableFuture<String> run(Player player, WorldData worldData) {
-        CompletableFuture<String> completableFuture = new CompletableFuture<>();
+    @Override
+    public CompletableFuture<WarpData> getWarpData(Player player, WorldData worldData) {
+        CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
         World world = player.getWorld();
 
-        tpHuskHomeSpawn(player).thenAccept(success -> {
-            if (!success) {
-                if (!tpEssentialsSpawn(player)) {
-                    if (player.teleport(world.getSpawnLocation())) {
-                        completableFuture.complete("Spawn");
-                    }
-                    else completableFuture.complete(null);
-                }
-                else completableFuture.complete("Spawn");
+        getHuskHomeSpawn(player).thenAccept(huskSpawn -> {
+            if (huskSpawn == null) {
+                Location essentialsSpawn = getEssentialsSpawn();
+                if (essentialsSpawn == null) completableFuture.complete(new WarpData("Spawn", world.getSpawnLocation()));
+                else completableFuture.complete(new WarpData("Spawn", essentialsSpawn));
             }
-            else completableFuture.complete("Spawn");
+            else {
+                completableFuture.complete(new WarpData("Spawn", huskSpawn));
+            }
         });
 
         return completableFuture;
     }
 
-    private boolean tpEssentialsSpawn(Player player) {
+    private Location getEssentialsSpawn() {
         EssentialsSpawnHook essentialsSpawn = VoidWarp.essentialsSpawnAPI();
-        if (essentialsSpawn == null) return false;
+        if (essentialsSpawn == null) return null;
 
-        return player.teleport(essentialsSpawn.getSpawn("default"));
+        return essentialsSpawn.getSpawn("default");
     }
 
-    private CompletableFuture<Boolean> tpHuskHomeSpawn(Player player) {
-        CompletableFuture<Boolean> completableFuture = new CompletableFuture<>();
+    private CompletableFuture<Runnable> getHuskHomeSpawn(Player player) {
+        CompletableFuture<Runnable> completableFuture = new CompletableFuture<>();
 
         HuskHomesHook huskHomesAPI = VoidWarp.huskHomesAPI();
-        if (huskHomesAPI == null) completableFuture.complete(false);
-        else huskHomesAPI.getSpawn().thenAccept(spawn -> huskHomesAPI.teleportPlayer(player, spawn).thenAccept(completableFuture::complete));
+        if (huskHomesAPI == null) completableFuture.complete(null);
+        else huskHomesAPI.getSpawn().thenAccept(spawn -> completableFuture.complete(() -> huskHomesAPI.teleportPlayer(player, spawn)));
 
         return completableFuture;
     }
