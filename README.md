@@ -2,7 +2,7 @@
 # VoidWarp
 This is at heart a simple void teleport plugin. However, it offers multiple different compatibilities and multiple different teleport modes. Most notably the ability to teleport the player to the nearest warp to the player!
 
-Want to stop your players infinitely falling in your Limbo? Try [VoidWarp-Limbo](https://github.com/CoolDCB/VoidWarp-Limbo)!
+Want to stop your players infinitely falling in your [Standalone Limbo](https://www.spigotmc.org/resources/limbo-standalone-server-lightweight-solution-for-afk-or-waiting-rooms-in-your-server-network.82468/)? Try [VoidWarp-Limbo](https://github.com/CoolDCB/VoidWarp-Limbo)!
 
 **Download Link**: https://www.spigotmc.org/resources/voidwarp.107811/
 
