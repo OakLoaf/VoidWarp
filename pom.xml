@@ -87,7 +87,7 @@
         <dependency>
             <groupId>com.github.CoolDCB</groupId>
             <artifactId>ChatColorHandler</artifactId>
-            <version>v1.2.4</version>
+            <version>v2.1.0</version>
         </dependency>
         <!-- Essentials Plugin API -->
         <dependency>
