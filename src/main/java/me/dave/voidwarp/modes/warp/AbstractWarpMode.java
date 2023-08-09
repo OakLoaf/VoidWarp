@@ -1,4 +1,4 @@
-package me.dave.voidwarp.modes.wap;
+package me.dave.voidwarp.modes.warp;
 
 import me.dave.voidwarp.ConfigManager;
 import me.dave.voidwarp.data.VoidModes;

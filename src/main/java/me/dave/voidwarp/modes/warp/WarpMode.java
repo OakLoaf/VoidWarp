@@ -1,4 +1,4 @@
-package me.dave.voidwarp.modes.wap;
+package me.dave.voidwarp.modes.warp;
 
 import me.dave.voidwarp.VoidWarp;
 import me.dave.voidwarp.apis.EssentialsHook;
