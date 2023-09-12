@@ -1,7 +1,7 @@
 package me.dave.voidwarp.events;
 
 import me.dave.chatcolorhandler.ChatColorHandler;
-import me.dave.voidwarp.ConfigManager;
+import me.dave.voidwarp.config.ConfigManager;
 import me.dave.voidwarp.data.VoidMode;
 import me.dave.voidwarp.data.VoidModes;
 import me.dave.voidwarp.modes.*;

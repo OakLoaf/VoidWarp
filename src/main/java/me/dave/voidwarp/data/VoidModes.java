@@ -1,6 +1,6 @@
 package me.dave.voidwarp.data;
 
-import me.dave.voidwarp.ConfigManager;
+import me.dave.voidwarp.config.ConfigManager;
 import org.bukkit.entity.Player;
 
 import java.util.concurrent.CompletableFuture;

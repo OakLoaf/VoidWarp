@@ -1,5 +1,6 @@
-package me.dave.voidwarp;
+package me.dave.voidwarp.config;
 
+import me.dave.voidwarp.VoidWarp;
 import me.dave.voidwarp.apis.EssentialsHook;
 import me.dave.voidwarp.apis.HuskHomesHook;
 import me.dave.voidwarp.apis.WarpSystemHook;

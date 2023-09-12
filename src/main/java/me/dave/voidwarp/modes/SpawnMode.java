@@ -1,6 +1,6 @@
 package me.dave.voidwarp.modes;
 
-import me.dave.voidwarp.ConfigManager.WorldData;
+import me.dave.voidwarp.config.ConfigManager.WorldData;
 import me.dave.voidwarp.VoidWarp;
 import me.dave.voidwarp.apis.EssentialsSpawnHook;
 import me.dave.voidwarp.apis.HuskHomesHook;

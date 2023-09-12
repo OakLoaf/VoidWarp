@@ -1,6 +1,6 @@
 package me.dave.voidwarp.modes;
 
-import me.dave.voidwarp.ConfigManager.WorldData;
+import me.dave.voidwarp.config.ConfigManager.WorldData;
 import me.dave.voidwarp.data.VoidModes;
 import me.dave.voidwarp.data.WarpData;
 import org.bukkit.Bukkit;
