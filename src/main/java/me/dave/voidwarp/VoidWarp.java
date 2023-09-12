@@ -1,6 +1,5 @@
 package me.dave.voidwarp;
 
-import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.voidwarp.apis.EssentialsHook;
 import me.dave.voidwarp.apis.EssentialsSpawnHook;
 import me.dave.voidwarp.apis.HuskHomesHook;
@@ -41,8 +40,6 @@ public final class VoidWarp extends JavaPlugin {
         configManager = new ConfigManager();
 
         getCommand("vwreload").setExecutor(new ReloadCmd());
-
-        ChatColorHandler.enableMiniMessage(true);
     }
 
     public static VoidWarp getInstance() {
