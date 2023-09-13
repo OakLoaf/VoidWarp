@@ -2,12 +2,9 @@ package me.dave.voidwarp.events;
 
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.voidwarp.config.ConfigManager;
-import me.dave.voidwarp.mode.VoidMode;
+import me.dave.voidwarp.hook.WorldGuardHook;
+import me.dave.voidwarp.mode.*;
 import me.dave.voidwarp.VoidWarp;
-import me.dave.voidwarp.mode.CommandMode;
-import me.dave.voidwarp.mode.LocationMode;
-import me.dave.voidwarp.mode.SpawnMode;
-import me.dave.voidwarp.mode.WarpMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -15,12 +12,13 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.HashSet;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class PlayerEvents implements Listener {
-    private final HashSet<UUID> processingList = new HashSet<>();
+    private final HashMap<UUID, Long> processingMap = new HashMap<>();
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
@@ -31,10 +29,12 @@ public class PlayerEvents implements Listener {
         }
 
         UUID playerUniqueId = player.getUniqueId();
+        Long timeout = processingMap.get(playerUniqueId);
         // Checks if player teleportation is currently being processed
-        if (processingList.contains(player.getUniqueId())) {
+        if (timeout != null && timeout >= Instant.now().getEpochSecond()) {
             return;
         }
+        processingMap.remove(playerUniqueId);
 
         // Gets and checks this world's WorldData
         World world = player.getWorld();
@@ -49,9 +49,14 @@ public class PlayerEvents implements Listener {
             return;
         }
 
+        if (VoidWarp.isPluginAvailable(WorldGuardHook.PLUGIN_NAME) && VoidWarp.getOrLoadHook(WorldGuardHook.PLUGIN_NAME) instanceof WorldGuardHook hook && !hook.isRegionEnabled(player)) {
+            return;
+        }
+
         // Gets the world's VoidMode
         VoidMode<?> voidMode;
         switch (worldData.modeType()) {
+            case BOUNCE -> voidMode = new BounceMode((BounceMode.BounceModeData) worldData.data());
             case COMMAND -> voidMode = new CommandMode((CommandMode.CommandModeData) worldData.data());
             case LOCATION -> voidMode = new LocationMode((LocationMode.LocationModeData) worldData.data());
             case SPAWN -> voidMode = new SpawnMode((SpawnMode.SpawnModeData) worldData.data());
@@ -60,14 +65,14 @@ public class PlayerEvents implements Listener {
         }
 
         // Attempts to teleport the player using the specified VoidMode
-        processingList.add(playerUniqueId);
+        processingMap.put(playerUniqueId, Instant.now().plusSeconds(6).getEpochSecond());
         voidMode.getWarpData(player, worldData)
             .completeOnTimeout(null, 5000, TimeUnit.MILLISECONDS)
             .thenAccept(warpData -> {
                 if (warpData == null) {
                     // TODO: Make message configurable
                     ChatColorHandler.sendActionBarMessage(player, "&cFailed to warp");
-                    processingList.remove(playerUniqueId);
+                    processingMap.remove(playerUniqueId);
                     return;
                 }
 
@@ -85,17 +90,18 @@ public class PlayerEvents implements Listener {
                 }
 
                 // Creates and sends Action Bar message
-                String message = null;
+                String message = worldData.message();
                 String destinationName = warpData.getName();
-                if (destinationName != null) {
-                    message = worldData.message().replaceAll("%location%", destinationName);
-                }
                 if (message != null) {
+                    if (destinationName != null) {
+                        message = message.replaceAll("%location%", destinationName);
+                    }
+
                     ChatColorHandler.sendActionBarMessage(player, message);
                 }
 
                 // Remove the player from the processing list
-                processingList.remove(playerUniqueId);
+                processingMap.remove(playerUniqueId);
             });
 
         // TODO: Create some form of backup that removes the player if for whatever reason they aren't removed

@@ -14,6 +14,7 @@ repositories {
     maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
     maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
     maven { url = uri("https://ci.ender.zone/plugin/repository/everything/") }
+    maven { url = uri("https://maven.enginehub.org/repo/") }
     maven { url = uri("https://jitpack.io") }
 }
 
@@ -24,6 +25,7 @@ dependencies {
     compileOnly("net.william278:HuskHomes2:4.1.1")
     compileOnly("com.github.CodingAir:WarpSystem-API:5.1.6")
     compileOnly("com.github.CodingAir:CodingAPI:1.64")
+    compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
     shadow("com.github.CoolDCB:ChatColorHandler:v2.1.3")
 }
 

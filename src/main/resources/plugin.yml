@@ -4,7 +4,13 @@ main: me.dave.voidwarp.VoidWarp
 api-version: 1.16
 authors: [ Dav_e_ ]
 description: Teleports you to a specific location, runs a command or warps you to the nearest warp when you go above or below a specified Y level.
-softdepend: [ Essentials, EssentialsSpawn, HuskHomes, WarpSystem ]
+softdepend:
+  - Essentials
+  - EssentialsSpawn
+  - HuskHomes
+  - PlaceholderAPI
+  - WarpSystem
+  - WorldGuard
 commands:
   vwreload:
     description: Reloads the plugin
