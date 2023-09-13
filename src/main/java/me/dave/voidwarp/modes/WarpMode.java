@@ -7,7 +7,6 @@ import me.dave.voidwarp.hook.WarpSystemHook;
 import me.dave.voidwarp.config.ConfigManager;
 import me.dave.voidwarp.data.VoidMode;
 import me.dave.voidwarp.data.VoidModeData;
-import me.dave.voidwarp.data.VoidModeType;
 import me.dave.voidwarp.data.WarpData;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -21,11 +20,6 @@ public class WarpMode extends VoidMode<WarpMode.WarpModeData> {
 
     public WarpMode(WarpModeData data) {
         super(data);
-    }
-
-    @Override
-    public VoidModeType getVoidModeType() {
-        return VoidModeType.WARP;
     }
 
     @Override

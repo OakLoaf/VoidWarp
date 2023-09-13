@@ -3,7 +3,6 @@ package me.dave.voidwarp.modes;
 import me.dave.voidwarp.config.ConfigManager.WorldData;
 import me.dave.voidwarp.data.VoidMode;
 import me.dave.voidwarp.data.VoidModeData;
-import me.dave.voidwarp.data.VoidModeType;
 import me.dave.voidwarp.data.WarpData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -17,11 +16,6 @@ public class CommandMode extends VoidMode<CommandMode.CommandModeData> {
 
     public CommandMode(CommandModeData data) {
         super(data);
-    }
-
-    @Override
-    public VoidModeType getVoidModeType() {
-        return VoidModeType.COMMAND;
     }
 
     @Override

@@ -12,8 +12,6 @@ public abstract class VoidMode<T extends VoidModeData> {
         this.data = data;
     }
 
-    public abstract VoidModeType getVoidModeType();
-
     /**
      * Get the warp data to be used
      *

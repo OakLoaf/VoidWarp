@@ -6,7 +6,6 @@ import me.dave.voidwarp.hook.EssentialsSpawnHook;
 import me.dave.voidwarp.hook.HuskHomesHook;
 import me.dave.voidwarp.data.VoidMode;
 import me.dave.voidwarp.data.VoidModeData;
-import me.dave.voidwarp.data.VoidModeType;
 import me.dave.voidwarp.data.WarpData;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -18,11 +17,6 @@ public class SpawnMode extends VoidMode<SpawnMode.SpawnModeData> {
 
     public SpawnMode(SpawnModeData data) {
         super(data);
-    }
-
-    @Override
-    public VoidModeType getVoidModeType() {
-        return VoidModeType.SPAWN;
     }
 
     @Override
