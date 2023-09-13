@@ -1,13 +1,10 @@
 package me.dave.voidwarp.config;
 
 import me.dave.voidwarp.VoidWarp;
-import me.dave.voidwarp.mode.VoidModeData;
-import me.dave.voidwarp.mode.VoidModeType;
-import me.dave.voidwarp.mode.CommandMode;
-import me.dave.voidwarp.mode.LocationMode;
-import me.dave.voidwarp.mode.SpawnMode;
-import me.dave.voidwarp.mode.WarpMode;
+import me.dave.voidwarp.mode.*;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -31,7 +28,7 @@ public class ConfigManager {
                 String worldName = entry.getKey();
                 double yMin = configurationSection.getDouble("yMin", -Double.MAX_VALUE);
                 double yMax = configurationSection.getDouble("yMax", Double.MAX_VALUE);
-                String message = configurationSection.getString("message");
+                String message = configurationSection.getString("message", null);
 
                 VoidModeType mode;
                 try {
@@ -43,6 +40,19 @@ public class ConfigManager {
 
                 VoidModeData data;
                 switch (mode) {
+                    case BOUNCE -> {
+                        World world = Bukkit.getWorld(worldName);
+                        double x = configurationSection.getDouble("x");
+                        double y = configurationSection.getDouble("y");
+                        double z = configurationSection.getDouble("z");
+
+                        String locationName = configurationSection.getString("name");
+                        Location location = new Location(world, x, y, z);
+                        double speed = configurationSection.getDouble("speed", 1) / 100D;
+
+                        data = new BounceMode.BounceModeData(locationName, location, speed);
+                    }
+
                     case COMMAND -> {
                         String locationName = configurationSection.getString("name");
                         List<String> commands = configurationSection.getStringList("commands");
@@ -58,6 +68,7 @@ public class ConfigManager {
                     }
 
                     case LOCATION -> {
+                        World world = Bukkit.getWorld(worldName);
                         double x = configurationSection.getDouble("x");
                         double y = configurationSection.getDouble("y");
                         double z = configurationSection.getDouble("z");
@@ -65,7 +76,7 @@ public class ConfigManager {
                         float pitch = (float)  configurationSection.getDouble("pitch", 0.0);
 
                         String locationName = configurationSection.getString("name");
-                        Location location = new Location(null, x, y, z, yaw, pitch);
+                        Location location = new Location(world, x, y, z, yaw, pitch);
 
                         data = new LocationMode.LocationModeData(locationName, location);
                     }
