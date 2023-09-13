@@ -1,12 +1,12 @@
 package me.dave.voidwarp.config;
 
 import me.dave.voidwarp.VoidWarp;
-import me.dave.voidwarp.data.VoidModeData;
-import me.dave.voidwarp.data.VoidModeType;
-import me.dave.voidwarp.modes.CommandMode;
-import me.dave.voidwarp.modes.LocationMode;
-import me.dave.voidwarp.modes.SpawnMode;
-import me.dave.voidwarp.modes.WarpMode;
+import me.dave.voidwarp.mode.VoidModeData;
+import me.dave.voidwarp.mode.VoidModeType;
+import me.dave.voidwarp.mode.CommandMode;
+import me.dave.voidwarp.mode.LocationMode;
+import me.dave.voidwarp.mode.SpawnMode;
+import me.dave.voidwarp.mode.WarpMode;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;

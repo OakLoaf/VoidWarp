@@ -2,19 +2,18 @@ package me.dave.voidwarp.events;
 
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.voidwarp.config.ConfigManager;
-import me.dave.voidwarp.data.VoidMode;
+import me.dave.voidwarp.mode.VoidMode;
 import me.dave.voidwarp.VoidWarp;
-import me.dave.voidwarp.modes.CommandMode;
-import me.dave.voidwarp.modes.LocationMode;
-import me.dave.voidwarp.modes.SpawnMode;
-import me.dave.voidwarp.modes.WarpMode;
+import me.dave.voidwarp.mode.CommandMode;
+import me.dave.voidwarp.mode.LocationMode;
+import me.dave.voidwarp.mode.SpawnMode;
+import me.dave.voidwarp.mode.WarpMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.util.Vector;
 
 import java.util.HashSet;
 import java.util.UUID;

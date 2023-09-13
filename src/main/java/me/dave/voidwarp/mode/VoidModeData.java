@@ -1,4 +1,4 @@
-package me.dave.voidwarp.data;
+package me.dave.voidwarp.mode;
 
 public class VoidModeData {
     private final String name;

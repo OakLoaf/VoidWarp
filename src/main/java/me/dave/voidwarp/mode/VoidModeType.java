@@ -1,9 +1,4 @@
-package me.dave.voidwarp.data;
-
-import me.dave.voidwarp.modes.CommandMode;
-import me.dave.voidwarp.modes.LocationMode;
-import me.dave.voidwarp.modes.SpawnMode;
-import me.dave.voidwarp.modes.WarpMode;
+package me.dave.voidwarp.mode;
 
 public enum VoidModeType {
     COMMAND(CommandMode.class),

@@ -1,11 +1,9 @@
-package me.dave.voidwarp.modes;
+package me.dave.voidwarp.mode;
 
 import me.dave.voidwarp.config.ConfigManager.WorldData;
 import me.dave.voidwarp.VoidWarp;
 import me.dave.voidwarp.hook.EssentialsSpawnHook;
 import me.dave.voidwarp.hook.HuskHomesHook;
-import me.dave.voidwarp.data.VoidMode;
-import me.dave.voidwarp.data.VoidModeData;
 import me.dave.voidwarp.data.WarpData;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

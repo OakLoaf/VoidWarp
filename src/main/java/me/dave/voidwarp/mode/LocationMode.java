@@ -1,8 +1,6 @@
-package me.dave.voidwarp.modes;
+package me.dave.voidwarp.mode;
 
 import me.dave.voidwarp.config.ConfigManager;
-import me.dave.voidwarp.data.VoidMode;
-import me.dave.voidwarp.data.VoidModeData;
 import me.dave.voidwarp.data.WarpData;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
