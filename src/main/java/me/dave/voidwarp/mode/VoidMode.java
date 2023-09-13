@@ -9,6 +9,7 @@ import java.util.concurrent.CompletableFuture;
 public abstract class VoidMode<T extends VoidModeData> {
     protected final T data;
 
+    // TODO: Accept WorldData instead?
     public VoidMode(T data) {
         this.data = data;
     }
