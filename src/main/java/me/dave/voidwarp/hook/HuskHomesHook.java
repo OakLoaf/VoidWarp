@@ -1,4 +1,4 @@
-package me.dave.voidwarp.apis;
+package me.dave.voidwarp.hook;
 
 import me.dave.voidwarp.data.WarpData;
 import net.william278.huskhomes.api.HuskHomesAPI;
@@ -13,7 +13,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-public class HuskHomesHook {
+public class HuskHomesHook implements Hook {
+    public static final String PLUGIN_NAME = "HuskHomes";
     private final HuskHomesAPI huskHomes = HuskHomesAPI.getInstance();
 
     public CompletableFuture<Collection<String>> getWarps() {

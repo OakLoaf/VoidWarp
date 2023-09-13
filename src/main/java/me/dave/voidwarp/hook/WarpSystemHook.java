@@ -1,4 +1,4 @@
-package me.dave.voidwarp.apis;
+package me.dave.voidwarp.hook;
 
 import de.codingair.warpsystem.api.ITeleportManager;
 import de.codingair.warpsystem.api.TeleportService;
@@ -10,7 +10,8 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class WarpSystemHook {
+public class WarpSystemHook implements Hook {
+    public static final String PLUGIN_NAME = "WarpSystem";
     private final ITeleportManager warpSystem;
 
     public WarpSystemHook() {

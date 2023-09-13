@@ -22,7 +22,7 @@ Want to stop your players infinitely falling in your [Standalone Limbo](https://
 ############################
 
 world:
-  # mode: The mode to use when the player is in the region (SPAWN/COMMAND/WARP/ESSENTIALS_WARP/HUSKHOME_WARP)
+  # modeType: The modeType to use when the player is in the region (SPAWN/COMMAND/WARP/ESSENTIALS_WARP/HUSKHOME_WARP)
   mode: SPAWN
   # yMin: The Y coordinate at the bottom of the range (Leave empty to have no minimum)
   yMin: -1000
@@ -30,11 +30,11 @@ world:
   yMax: 0
   # message: The message that is displayed in chat when you are teleported
   message: "<grey>Teleported to <yellow>%location%</yellow>."
-  # commands: Commands to be ran when in the region (Note: Only valid if mode is "COMMAND") (COMMANDS CURRENTLY ONLY RAN AS PLAYER)
+  # commands: Commands to be ran when in the region (Note: Only valid if modeType is "COMMAND") (COMMANDS CURRENTLY ONLY RAN AS PLAYER)
   commands: [ ]
-  # warps: A list of warps (Note: Only valid if mode is "WARP", "ESSENTIALS_WARP" OR "HUSKHOME_WARP")
+  # warps: A list of warps (Note: Only valid if modeType is "WARP", "ESSENTIALS_WARP" OR "HUSKHOME_WARP")
   warps: [ ]
-  # whitelist: Sets whether the warps list is a whitelist or blacklist (Note: Only valid if mode is "WARP")
+  # whitelist: Sets whether the warps list is a whitelist or blacklist (Note: Only valid if modeType is "WARP")
   whitelist: true
 ```
 

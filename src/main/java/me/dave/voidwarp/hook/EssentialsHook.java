@@ -1,4 +1,4 @@
-package me.dave.voidwarp.apis;
+package me.dave.voidwarp.hook;
 
 import com.earth2me.essentials.Essentials;
 import com.earth2me.essentials.commands.WarpNotFoundException;
@@ -10,11 +10,12 @@ import org.bukkit.entity.Player;
 
 import java.util.Collection;
 
-public class EssentialsHook {
+public class EssentialsHook implements Hook {
+    public static final String PLUGIN_NAME = "Essentials";
     private final Essentials essentials;
 
     public EssentialsHook() {
-        essentials = (Essentials) Bukkit.getPluginManager().getPlugin("Essentials");
+        essentials = (Essentials) Bukkit.getPluginManager().getPlugin(PLUGIN_NAME);
     }
 
     public Collection<String> getWarps() {

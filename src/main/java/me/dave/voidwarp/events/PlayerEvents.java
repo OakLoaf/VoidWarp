@@ -3,80 +3,101 @@ package me.dave.voidwarp.events;
 import me.dave.chatcolorhandler.ChatColorHandler;
 import me.dave.voidwarp.config.ConfigManager;
 import me.dave.voidwarp.data.VoidMode;
-import me.dave.voidwarp.data.VoidModes;
-import me.dave.voidwarp.modes.*;
 import me.dave.voidwarp.VoidWarp;
-import me.dave.voidwarp.modes.warp.EssentialsWarpMode;
-import me.dave.voidwarp.modes.warp.HuskWarpMode;
-import me.dave.voidwarp.modes.warp.WarpMode;
-import me.dave.voidwarp.modes.warp.WarpSystemWarpMode;
+import me.dave.voidwarp.modes.CommandMode;
+import me.dave.voidwarp.modes.LocationMode;
+import me.dave.voidwarp.modes.SpawnMode;
+import me.dave.voidwarp.modes.WarpMode;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.util.Vector;
 
-import java.util.EnumMap;
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerEvents implements Listener {
-    private final EnumMap<VoidMode, VoidModes> voidModesMap = new EnumMap<>(VoidMode.class);
     private final HashSet<UUID> processingList = new HashSet<>();
-
-    public PlayerEvents() {
-        voidModesMap.put(VoidMode.COMMAND, new CommandMode());
-        voidModesMap.put(VoidMode.SPAWN, new SpawnMode());
-        if (VoidWarp.essentialsAPI() != null || VoidWarp.huskHomesAPI() != null) voidModesMap.put(VoidMode.WARP, new WarpMode());
-        if (VoidWarp.essentialsAPI() != null) voidModesMap.put(VoidMode.ESSENTIALS_WARP, new EssentialsWarpMode());
-        if (VoidWarp.huskHomesAPI() != null) voidModesMap.put(VoidMode.HUSKHOMES_WARP, new HuskWarpMode());
-        if (VoidWarp.warpSystemAPI() != null) voidModesMap.put(VoidMode.WARPSYSTEM_WARP, new WarpSystemWarpMode());
-    }
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         // Checks if player bypasses VoidWarp
-        if (player.hasPermission("voidwarp.admin.bypass")) return;
+        if (player.hasPermission("voidwarp.admin.bypass")) {
+            return;
+        }
+
+        UUID playerUniqueId = player.getUniqueId();
         // Checks if player teleportation is currently being processed
-        if (processingList.contains(player.getUniqueId())) return;
+        if (processingList.contains(player.getUniqueId())) {
+            return;
+        }
 
         // Gets and checks this world's WorldData
         World world = player.getWorld();
         ConfigManager.WorldData worldData = VoidWarp.configManager.getWorldData(world.getName());
-        if (worldData == null) return;
+        if (worldData == null) {
+            return;
+        }
 
         // Checks if the player is within the set height range
         double currYHeight = player.getLocation().getY();
-        if (currYHeight <= worldData.yMin()) return;
-        if (currYHeight >= worldData.yMax()) return;
+        if (currYHeight <= worldData.yMin() || currYHeight >= worldData.yMax()) {
+            return;
+        }
 
-        // Gets the world's VoidMode, if it fails then it will default to Spawn
-        VoidModes voidMode = voidModesMap.get(worldData.mode());
-        if (voidMode == null) voidMode = voidModesMap.get(VoidMode.SPAWN);
+        // Gets the world's VoidMode
+        VoidMode<?> voidMode;
+        switch (worldData.modeType()) {
+            case COMMAND -> voidMode = new CommandMode((CommandMode.CommandModeData) worldData.data());
+            case LOCATION -> voidMode = new LocationMode((LocationMode.LocationModeData) worldData.data());
+            case SPAWN -> voidMode = new SpawnMode((SpawnMode.SpawnModeData) worldData.data());
+            case WARP -> voidMode = new WarpMode((WarpMode.WarpModeData) worldData.data());
+            default -> throw new IllegalArgumentException("Invalid mode specified");
+        }
 
         // Attempts to teleport the player using the specified VoidMode
-        UUID playerUUID = player.getUniqueId();
-        processingList.add(playerUUID);
-        voidMode.getWarpData(player, worldData).thenAccept(warpData -> {
-            // Teleports the player if a location is provided
-            Location location = warpData.getLocation();
-            if (location != null) player.teleport(location);
+        processingList.add(playerUniqueId);
+        voidMode.getWarpData(player, worldData)
+            .completeOnTimeout(null, 5000, TimeUnit.MILLISECONDS)
+            .thenAccept(warpData -> {
+                if (warpData == null) {
+                    // TODO: Make message configurable
+                    ChatColorHandler.sendActionBarMessage(player, "&cFailed to warp");
+                    processingList.remove(playerUniqueId);
+                    return;
+                }
 
-            // Executes runnable actions
-            Runnable runnable = warpData.getRunnable();
-            if (runnable != null) runnable.run();
+                // Teleports the player if a location is provided
+                Location location = warpData.getLocation();
+                if (location != null) {
+                    player.setFallDistance(0);
+                    player.teleport(location);
+                }
 
-            // Creates and sends Action Bar message
-            String message = null;
-            String destinationName = warpData.getName();
-            if (destinationName != null) message = worldData.message().replaceAll("%location%", destinationName);
-            if (message != null) ChatColorHandler.sendActionBarMessage(player, message);
+                // Executes runnable actions
+                Runnable runnable = warpData.getRunnable();
+                if (runnable != null) {
+                    runnable.run();
+                }
 
-            // Remove the player from the processing list
-            processingList.remove(playerUUID);
-        });
+                // Creates and sends Action Bar message
+                String message = null;
+                String destinationName = warpData.getName();
+                if (destinationName != null) {
+                    message = worldData.message().replaceAll("%location%", destinationName);
+                }
+                if (message != null) {
+                    ChatColorHandler.sendActionBarMessage(player, message);
+                }
+
+                // Remove the player from the processing list
+                processingList.remove(playerUniqueId);
+            });
 
         // TODO: Create some form of backup that removes the player if for whatever reason they aren't removed
     }

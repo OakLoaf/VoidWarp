@@ -2,51 +2,80 @@ package me.dave.voidwarp.modes;
 
 import me.dave.voidwarp.config.ConfigManager.WorldData;
 import me.dave.voidwarp.VoidWarp;
-import me.dave.voidwarp.apis.EssentialsSpawnHook;
-import me.dave.voidwarp.apis.HuskHomesHook;
-import me.dave.voidwarp.data.VoidModes;
+import me.dave.voidwarp.hook.EssentialsSpawnHook;
+import me.dave.voidwarp.hook.HuskHomesHook;
+import me.dave.voidwarp.data.VoidMode;
+import me.dave.voidwarp.data.VoidModeData;
+import me.dave.voidwarp.data.VoidModeType;
 import me.dave.voidwarp.data.WarpData;
-import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.CompletableFuture;
 
-public class SpawnMode implements VoidModes {
+public class SpawnMode extends VoidMode<SpawnMode.SpawnModeData> {
+
+    public SpawnMode(SpawnModeData data) {
+        super(data);
+    }
+
+    @Override
+    public VoidModeType getVoidModeType() {
+        return VoidModeType.SPAWN;
+    }
 
     @Override
     public CompletableFuture<WarpData> getWarpData(Player player, WorldData worldData) {
         CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
         World world = player.getWorld();
 
-        getHuskHomeSpawn(player).thenAccept(huskSpawn -> {
-            if (huskSpawn == null) {
-                Location essentialsSpawn = getEssentialsSpawn();
-                if (essentialsSpawn == null) completableFuture.complete(new WarpData("Spawn", world.getSpawnLocation()));
-                else completableFuture.complete(new WarpData("Spawn", essentialsSpawn));
+        switch (data.getPlugin()) {
+            case EssentialsSpawnHook.PLUGIN_NAME -> {
+                if (VoidWarp.getOrLoadHook(EssentialsSpawnHook.PLUGIN_NAME) instanceof EssentialsSpawnHook hook) {
+                    completableFuture.complete(new WarpData(data.getName(), hook.getSpawn("default")));
+                } else {
+                    completableFuture.complete(null);
+                }
             }
-            else {
-                completableFuture.complete(new WarpData("Spawn", huskSpawn));
+            case HuskHomesHook.PLUGIN_NAME -> {
+                if (VoidWarp.getOrLoadHook(HuskHomesHook.PLUGIN_NAME) instanceof HuskHomesHook hook) {
+                    hook.getSpawn().thenAccept(spawn -> completableFuture.complete(new WarpData(data.getName(), () -> hook.teleportPlayer(player, spawn))));
+                } else {
+                    completableFuture.complete(null);
+                }
             }
-        });
+            default -> {
+                completableFuture.complete(new WarpData(data.getName(), world.getSpawnLocation()));
+            }
+        }
 
         return completableFuture;
     }
 
-    private Location getEssentialsSpawn() {
-        EssentialsSpawnHook essentialsSpawn = VoidWarp.essentialsSpawnAPI();
-        if (essentialsSpawn == null) return null;
+    public static class SpawnModeData extends VoidModeData {
+        private final String plugin;
 
-        return essentialsSpawn.getSpawn("default");
-    }
+        public SpawnModeData(String name, @Nullable String plugin) {
+            super(name);
 
-    private CompletableFuture<Runnable> getHuskHomeSpawn(Player player) {
-        CompletableFuture<Runnable> completableFuture = new CompletableFuture<>();
+            if (plugin == null) {
+                if (VoidWarp.isPluginAvailable(EssentialsSpawnHook.PLUGIN_NAME)) {
+                    plugin = EssentialsSpawnHook.PLUGIN_NAME;
+                }
+                else if (VoidWarp.isPluginAvailable(HuskHomesHook.PLUGIN_NAME)) {
+                    plugin = HuskHomesHook.PLUGIN_NAME;
+                }
+                else {
+                    plugin = "Vanilla";
+                }
+            }
 
-        HuskHomesHook huskHomesAPI = VoidWarp.huskHomesAPI();
-        if (huskHomesAPI == null) completableFuture.complete(null);
-        else huskHomesAPI.getSpawn().thenAccept(spawn -> completableFuture.complete(() -> huskHomesAPI.teleportPlayer(player, spawn)));
+            this.plugin = plugin;
+        }
 
-        return completableFuture;
+        public String getPlugin() {
+            return plugin;
+        }
     }
 }
