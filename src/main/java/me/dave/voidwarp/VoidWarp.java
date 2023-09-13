@@ -15,11 +15,19 @@ public final class VoidWarp extends JavaPlugin {
     public static ConfigManager configManager;
 
     @Override
-    public void onEnable() {
+    public void onLoad() {
         plugin = this;
-
         availablePlugins = new HashMap<>();
 
+        PluginManager pluginManager = getServer().getPluginManager();
+        if (pluginManager.getPlugin(WorldGuardHook.PLUGIN_NAME) != null) {
+            getLogger().info("Found plugin \"WorldGuard\". WorldGuard support enabled.");
+            availablePlugins.put("WorldGuard", new WorldGuardHook());
+        }
+    }
+
+    @Override
+    public void onEnable() {
         PluginManager pluginManager = getServer().getPluginManager();
         if (pluginManager.getPlugin(EssentialsHook.PLUGIN_NAME) != null) {
             getLogger().info("Found plugin \"Essentials\". Essentials support enabled.");
