@@ -3,6 +3,7 @@ package me.dave.voidwarp.mode;
 import me.dave.voidwarp.VoidWarp;
 import me.dave.voidwarp.hook.EssentialsHook;
 import me.dave.voidwarp.hook.HuskHomesHook;
+import me.dave.voidwarp.hook.SunlightHook;
 import me.dave.voidwarp.hook.WarpSystemHook;
 import me.dave.voidwarp.config.ConfigManager;
 import me.dave.voidwarp.data.WarpData;
@@ -58,6 +59,13 @@ public class WarpMode extends VoidMode<WarpMode.WarpModeData> {
                     completableFuture.complete(null);
                 }
             }
+            case SunlightHook.PLUGIN_NAME -> {
+                if (VoidWarp.getOrLoadHook(SunlightHook.PLUGIN_NAME) instanceof SunlightHook hook) {
+                    completableFuture.complete(hook.getClosestWarp(player, warps));
+                } else {
+                    completableFuture.complete(null);
+                }
+            }
             case WarpSystemHook.PLUGIN_NAME -> {
                 if (VoidWarp.getOrLoadHook(WarpSystemHook.PLUGIN_NAME) instanceof WarpSystemHook hook) {
                     completableFuture.complete(hook.getClosestWarp(player, warps));
@@ -83,6 +91,9 @@ public class WarpMode extends VoidMode<WarpMode.WarpModeData> {
                 }
                 else if (VoidWarp.isPluginAvailable(HuskHomesHook.PLUGIN_NAME)) {
                     plugin = HuskHomesHook.PLUGIN_NAME;
+                }
+                else if (VoidWarp.isPluginAvailable(SunlightHook.PLUGIN_NAME)) {
+                    plugin = SunlightHook.PLUGIN_NAME;
                 }
                 else if (VoidWarp.isPluginAvailable(WarpSystemHook.PLUGIN_NAME)) {
                     plugin = WarpSystemHook.PLUGIN_NAME;
@@ -114,6 +125,16 @@ public class WarpMode extends VoidMode<WarpMode.WarpModeData> {
                             huskWarps.removeAll(warps);
                             this.warps.addAll(huskWarps);
                         });
+                    }
+                }
+                case SunlightHook.PLUGIN_NAME -> {
+                    if (whitelist) {
+                        this.warps = warps;
+                    } else {
+                        Collection<String> warpsCollection = ((SunlightHook) VoidWarp.getOrLoadHook(SunlightHook.PLUGIN_NAME)).getWarps();
+                        warpsCollection.removeAll(warps);
+
+                        this.warps = warpsCollection;
                     }
                 }
                 case WarpSystemHook.PLUGIN_NAME -> {

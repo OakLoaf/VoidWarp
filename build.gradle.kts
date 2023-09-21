@@ -26,6 +26,7 @@ dependencies {
     compileOnly("com.github.CodingAir:WarpSystem-API:5.1.6")
     compileOnly("com.github.CodingAir:CodingAPI:1.64")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
+    compileOnly(files("libs/SunLight-3.9.4.jar"))
     shadow("com.github.CoolDCB:ChatColorHandler:v2.1.3")
 }
 

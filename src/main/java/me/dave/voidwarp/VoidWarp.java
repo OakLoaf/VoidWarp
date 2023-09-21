@@ -22,7 +22,7 @@ public final class VoidWarp extends JavaPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
         if (pluginManager.getPlugin(WorldGuardHook.PLUGIN_NAME) != null) {
             getLogger().info("Found plugin \"WorldGuard\". WorldGuard support enabled.");
-            availablePlugins.put("WorldGuard", new WorldGuardHook());
+            availablePlugins.put(WorldGuardHook.PLUGIN_NAME, new WorldGuardHook());
         }
     }
 
@@ -31,22 +31,27 @@ public final class VoidWarp extends JavaPlugin {
         PluginManager pluginManager = getServer().getPluginManager();
         if (pluginManager.getPlugin(EssentialsHook.PLUGIN_NAME) != null) {
             getLogger().info("Found plugin \"Essentials\". Essentials support enabled.");
-            availablePlugins.put("Essentials", null);
+            availablePlugins.put(EssentialsHook.PLUGIN_NAME, null);
         }
 
-        if (pluginManager.getPlugin("EssentialsSpawn") != null) {
+        if (pluginManager.getPlugin(EssentialsSpawnHook.PLUGIN_NAME) != null) {
             getLogger().info("Found plugin \"EssentialsSpawn\". EssentialsSpawn support enabled.");
-            availablePlugins.put("EssentialsSpawn", null);
+            availablePlugins.put(EssentialsSpawnHook.PLUGIN_NAME, null);
         }
 
-        if (pluginManager.getPlugin("HuskHomes") != null) {
+        if (pluginManager.getPlugin(HuskHomesHook.PLUGIN_NAME) != null) {
             getLogger().info("Found plugin \"HuskHomes\". HuskHomes support enabled.");
-            availablePlugins.put("HuskHomes", null);
+            availablePlugins.put(HuskHomesHook.PLUGIN_NAME, null);
         }
 
-        if (pluginManager.getPlugin("WarpSystem") != null) {
+        if (pluginManager.getPlugin(SunlightHook.PLUGIN_NAME) != null) {
+            getLogger().info("Found plugin \"SunLight\". SunLight support enabled.");
+            availablePlugins.put(SunlightHook.PLUGIN_NAME, null);
+        }
+
+        if (pluginManager.getPlugin(WarpSystemHook.PLUGIN_NAME) != null) {
             getLogger().info("Found plugin \"WarpSystem\". WarpSystem support enabled.");
-            availablePlugins.put("WarpSystem", null);
+            availablePlugins.put(WarpSystemHook.PLUGIN_NAME, null);
         }
 
         configManager = new ConfigManager();
@@ -79,10 +84,11 @@ public final class VoidWarp extends JavaPlugin {
 
         if (hook == null) {
             switch(plugin) {
-                case "Essentials" -> hook = new EssentialsHook();
-                case "EssentialsSpawn" -> hook = new EssentialsSpawnHook();
-                case "HuskHomes" -> hook = new HuskHomesHook();
-                case "WarpSystem" -> hook = new WarpSystemHook();
+                case EssentialsHook.PLUGIN_NAME -> hook = new EssentialsHook();
+                case EssentialsSpawnHook.PLUGIN_NAME -> hook = new EssentialsSpawnHook();
+                case SunlightHook.PLUGIN_NAME -> hook = new SunlightHook();
+                case HuskHomesHook.PLUGIN_NAME -> hook = new HuskHomesHook();
+                case WarpSystemHook.PLUGIN_NAME -> hook = new WarpSystemHook();
             }
 
             if (hook != null) {

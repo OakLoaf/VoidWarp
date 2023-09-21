@@ -5,6 +5,7 @@ import me.dave.voidwarp.VoidWarp;
 import me.dave.voidwarp.hook.EssentialsSpawnHook;
 import me.dave.voidwarp.hook.HuskHomesHook;
 import me.dave.voidwarp.data.WarpData;
+import me.dave.voidwarp.hook.SunlightHook;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
@@ -37,6 +38,13 @@ public class SpawnMode extends VoidMode<SpawnMode.SpawnModeData> {
                     completableFuture.complete(null);
                 }
             }
+            case SunlightHook.PLUGIN_NAME -> {
+                if (VoidWarp.getOrLoadHook(SunlightHook.PLUGIN_NAME) instanceof SunlightHook hook) {
+                    completableFuture.complete(new WarpData(data.getName(), hook.getSpawn()));
+                } else {
+                    completableFuture.complete(null);
+                }
+            }
             default -> {
                 completableFuture.complete(new WarpData(data.getName(), world.getSpawnLocation()));
             }
@@ -57,6 +65,9 @@ public class SpawnMode extends VoidMode<SpawnMode.SpawnModeData> {
                 }
                 else if (VoidWarp.isPluginAvailable(HuskHomesHook.PLUGIN_NAME)) {
                     plugin = HuskHomesHook.PLUGIN_NAME;
+                }
+                else if (VoidWarp.isPluginAvailable(SunlightHook.PLUGIN_NAME)) {
+                    plugin = SunlightHook.PLUGIN_NAME;
                 }
                 else {
                     plugin = "Vanilla";

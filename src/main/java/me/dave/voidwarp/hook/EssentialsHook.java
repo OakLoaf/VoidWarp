@@ -24,8 +24,7 @@ public class EssentialsHook implements Hook {
 
     public Location getWarp(String warpName) {
         try {
-            if (essentials.getWarps() == null) return null;
-            return essentials.getWarps().getWarp(warpName);
+            return essentials.getWarps() != null ? essentials.getWarps().getWarp(warpName) : null;
         } catch (InvalidWorldException | WarpNotFoundException err) {
             return null;
         }
