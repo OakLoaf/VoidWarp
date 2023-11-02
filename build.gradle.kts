@@ -1,8 +1,7 @@
 plugins {
     java
-    `kotlin-dsl`
     `maven-publish`
-    id("com.github.johnrengelman.shadow") version("7.1.2")
+    id("com.github.johnrengelman.shadow") version("8.1.1")
 }
 
 group = "me.dave"
@@ -26,12 +25,12 @@ dependencies {
     compileOnly("com.github.CodingAir:WarpSystem-API:5.1.6")
     compileOnly("com.github.CodingAir:CodingAPI:1.64")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
-    compileOnly(files("libs/SunLight-3.9.4.jar"))
-    shadow("com.github.CoolDCB:ChatColorHandler:v2.1.3")
+    compileOnly(files("libs/SunLight-3.9.6.jar"))
+    compileOnly("su.nexmedia:NexEngine:2.2.12")
+    implementation("com.github.CoolDCB:ChatColorHandler:v2.1.3")
 }
 
 java {
-    configurations.shadow.get().dependencies.remove(dependencies.gradleApi())
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
 }
 
@@ -39,13 +38,15 @@ tasks {
     withType<JavaCompile> {
         options.encoding = "UTF-8"
     }
+
     shadowJar {
-        minimize()
-        configurations = listOf(project.configurations.shadow.get())
+        relocate("me.dave.chatcolorhandler", "me.dave.voidwarp.libraries.chatcolor")
+
         val folder = System.getenv("pluginFolder_1-20")
         if (folder != null) destinationDirectory.set(file(folder))
         archiveFileName.set("${project.name}-${project.version}.jar")
     }
+
     processResources{
         expand(project.properties)
 
