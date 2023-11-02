@@ -15,7 +15,7 @@ public class ReloadCmd implements CommandExecutor {
             return true;
         }
         VoidWarp.configManager.reloadConfig();
-        sender.sendMessage(ChatColorHandler.translateAlternateColorCodes("&aReloaded VoidWarp"));
+        sender.sendMessage(ChatColorHandler.translateAlternateColorCodes("&#b7faa2VoidWarp has been reloaded &#66b04f🔃"));
         return true;
     }
 }
