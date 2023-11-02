@@ -27,7 +27,7 @@ dependencies {
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
     compileOnly(files("libs/SunLight-3.9.6.jar"))
     compileOnly("su.nexmedia:NexEngine:2.2.12")
-    implementation("com.github.CoolDCB:ChatColorHandler:v2.1.3")
+    implementation("com.github.CoolDCB:ChatColorHandler:v2.2.0")
 }
 
 java {
