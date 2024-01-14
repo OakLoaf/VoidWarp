@@ -9,7 +9,7 @@ softdepend:
   - EssentialsSpawn
   - HuskHomes
   - PlaceholderAPI
-  - Sunlight
+  - SunLight
   - WarpSystem
   - WorldGuard
 commands:
