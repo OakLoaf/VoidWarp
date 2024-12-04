@@ -61,6 +61,7 @@ public class PlayerEvents implements Listener {
             case LOCATION -> voidMode = new LocationMode((LocationMode.LocationModeData) worldData.data());
             case SPAWN -> voidMode = new SpawnMode((SpawnMode.SpawnModeData) worldData.data());
             case WARP -> voidMode = new WarpMode((WarpMode.WarpModeData) worldData.data());
+            case CONSOLE -> voidMode = new ConsoleMode((CommandMode.CommandModeData) worldData.data());
             default -> throw new IllegalArgumentException("Invalid mode specified");
         }
 

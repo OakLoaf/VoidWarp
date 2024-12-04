@@ -3,7 +3,6 @@ package me.dave.voidwarp.mode;
 import me.dave.voidwarp.config.ConfigManager.WorldData;
 import me.dave.voidwarp.data.WarpData;
 import org.bukkit.Bukkit;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,10 +19,10 @@ public class CommandMode extends VoidMode<CommandMode.CommandModeData> {
     public CompletableFuture<WarpData> getWarpData(Player player, WorldData worldData) {
         CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
 
-        WarpData warpData = new WarpData(data.getName(), () -> {
-            ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-            data.getCommands().forEach(command -> Bukkit.dispatchCommand(console, command.replaceAll("%player%", player.getName())));
-        });
+        WarpData warpData = new WarpData(
+                data.getName(),
+                () -> data.getCommands().forEach(command -> Bukkit.dispatchCommand(player, command.replaceAll("%player%", player.getName())))
+        );
 
         completableFuture.complete(warpData);
         return completableFuture;

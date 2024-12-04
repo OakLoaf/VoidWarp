@@ -53,12 +53,13 @@ public class ConfigManager {
                         data = new BounceMode.BounceModeData(locationName, location, speed);
                     }
 
-                    case COMMAND -> {
+                    case COMMAND, CONSOLE -> {
                         String locationName = configurationSection.getString("name");
                         List<String> commands = configurationSection.getStringList("commands");
 
                         data = new CommandMode.CommandModeData(locationName, commands);
                     }
+
 
                     case SPAWN -> {
                         String locationName = configurationSection.getString("name", "Spawn");
