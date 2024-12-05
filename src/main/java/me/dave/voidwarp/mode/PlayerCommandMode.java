@@ -8,9 +8,9 @@ import org.bukkit.entity.Player;
 
 import java.util.concurrent.CompletableFuture;
 
-public class ConsoleMode extends VoidMode<CommandMode.CommandModeData> {
+public class PlayerCommandMode extends VoidMode<CommandMode.CommandModeData> {
 
-    public ConsoleMode(CommandMode.CommandModeData data) {
+    public PlayerCommandMode(CommandMode.CommandModeData data) {
         super(data);
     }
 
@@ -19,8 +19,7 @@ public class ConsoleMode extends VoidMode<CommandMode.CommandModeData> {
         CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
 
         WarpData warpData = new WarpData(data.getName(), () -> {
-            ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-            data.getCommands().forEach(command -> Bukkit.dispatchCommand(console, command.replaceAll("%player%", player.getName())));
+            data.getCommands().forEach(command -> Bukkit.dispatchCommand(player, command.replaceAll("%player%", player.getName())));
         });
 
         completableFuture.complete(warpData);
