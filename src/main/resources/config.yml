@@ -3,7 +3,7 @@
 ############################
 
 world:
-  # mode: The warp mode to use when the player is in the region (COMMAND/LOCATION/SPAWN/WARP)
+  # mode: The warp mode to use when the player is in the region (COMMAND/PLAYER_COMMAND/LOCATION/SPAWN/WARP)
   mode: SPAWN
   # yMin: The Y coordinate at the bottom of the range (Leave empty to have no minimum)
   yMin: -1000
@@ -11,7 +11,6 @@ world:
   yMax: 0
   # message: The message that is displayed in chat when you are teleported
   message: "&#b7faa2Teleported to &#66b04f%location%"
-
 world_warp_example:
   mode: WARP
   yMin: -1000
@@ -19,3 +18,18 @@ world_warp_example:
   message: "&#b7faa2Teleported to &#66b04f%location%"
   warps: []
   whitelist: false
+player_command_example:
+  mode: PLAYER_COMMAND
+  yMin: -1000
+  yMax: 0
+  message: "&7Teleported to &eyour island&7.""
+  commands:
+    - "island go"
+console_command_example:
+  mode: COMMAND
+  yMin: -1000
+  yMax: 0
+  message: "&7Teleported to &eWorld&7."
+  commands:
+    - "mv tp %player% world",
+    - "eco give %player% 1000"

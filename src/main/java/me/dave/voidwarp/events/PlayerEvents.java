@@ -58,6 +58,7 @@ public class PlayerEvents implements Listener {
         switch (worldData.modeType()) {
             case BOUNCE -> voidMode = new BounceMode((BounceMode.BounceModeData) worldData.data());
             case COMMAND -> voidMode = new CommandMode((CommandMode.CommandModeData) worldData.data());
+            case PLAYER_COMMAND -> voidMode = new PlayerCommandMode((CommandMode.CommandModeData) worldData.data());
             case LOCATION -> voidMode = new LocationMode((LocationMode.LocationModeData) worldData.data());
             case SPAWN -> voidMode = new SpawnMode((SpawnMode.SpawnModeData) worldData.data());
             case WARP -> voidMode = new WarpMode((WarpMode.WarpModeData) worldData.data());

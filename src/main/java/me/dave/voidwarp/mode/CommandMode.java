@@ -1,6 +1,6 @@
 package me.dave.voidwarp.mode;
 
-import me.dave.voidwarp.config.ConfigManager.WorldData;
+import me.dave.voidwarp.config.ConfigManager;
 import me.dave.voidwarp.data.WarpData;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
@@ -17,7 +17,7 @@ public class CommandMode extends VoidMode<CommandMode.CommandModeData> {
     }
 
     @Override
-    public CompletableFuture<WarpData> getWarpData(Player player, WorldData worldData) {
+    public CompletableFuture<WarpData> getWarpData(Player player, ConfigManager.WorldData worldData) {
         CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
 
         WarpData warpData = new WarpData(data.getName(), () -> {
