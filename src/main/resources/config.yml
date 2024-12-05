@@ -16,20 +16,20 @@ world_warp_example:
   yMin: -1000
   yMax: 0
   message: "&#b7faa2Teleported to &#66b04f%location%"
-  warps: [ ]
+  warps: []
   whitelist: false
 player_command_example:
   mode: PLAYER_COMMAND
   yMin: -1000
   yMax: 0
-  message: "<grey>Teleported to <yellow>your island</yellow>."
-  commands: [ "island go" ]
+  message: "&7Teleported to &eyour island&7.""
+  commands:
+    - "island go"
 console_command_example:
   mode: COMMAND
   yMin: -1000
   yMax: 0
-  message: "<grey>Teleported to <yellow>World</yellow>."
-  commands: [
-    "mv tp %player% world",
-    "eco give %player% 1000"
-  ]
+  message: "&7Teleported to &eWorld&7."
+  commands:
+    - "mv tp %player% world",
+    - "eco give %player% 1000"
