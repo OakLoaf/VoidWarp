@@ -22,7 +22,12 @@ public class CommandMode extends VoidMode<CommandMode.CommandModeData> {
 
         WarpData warpData = new WarpData(data.getName(), () -> {
             ConsoleCommandSender console = Bukkit.getServer().getConsoleSender();
-            data.getCommands().forEach(command -> Bukkit.dispatchCommand(console, command.replaceAll("%player%", player.getName())));
+            data.getCommands().forEach(
+                command -> Bukkit.dispatchCommand(
+                    console,
+                    command.replaceAll("%player%", player.getName())
+                )
+            );
         });
 
         completableFuture.complete(warpData);
