@@ -1,4 +1,4 @@
-package org.lushplugins.voidwarp.events;
+package org.lushplugins.voidwarp.listener;
 
 import org.lushplugins.chatcolorhandler.ChatColorHandler;
 import org.lushplugins.voidwarp.config.ConfigManager;
@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class PlayerEvents implements Listener {
+public class PlayerListener implements Listener {
     private final HashMap<UUID, Long> processingMap = new HashMap<>();
 
     @EventHandler

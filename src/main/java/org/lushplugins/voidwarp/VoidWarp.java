@@ -1,9 +1,9 @@
 package org.lushplugins.voidwarp;
 
 import org.lushplugins.voidwarp.hook.*;
-import org.lushplugins.voidwarp.commands.ReloadCmd;
+import org.lushplugins.voidwarp.command.ReloadCommand;
 import org.lushplugins.voidwarp.config.ConfigManager;
-import org.lushplugins.voidwarp.events.PlayerEvents;
+import org.lushplugins.voidwarp.listener.PlayerListener;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -56,9 +56,9 @@ public final class VoidWarp extends JavaPlugin {
 
         configManager = new ConfigManager();
 
-        getCommand("vwreload").setExecutor(new ReloadCmd());
+        getCommand("vwreload").setExecutor(new ReloadCommand());
 
-        getServer().getPluginManager().registerEvents(new PlayerEvents(), this);
+        getServer().getPluginManager().registerEvents(new PlayerListener(), this);
     }
 
     @Override

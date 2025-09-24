@@ -25,7 +25,7 @@ public class WarpMode extends VoidMode<WarpMode.WarpModeData> {
     public CompletableFuture<WarpData> getWarpData(Player player, ConfigManager.WorldData worldData) {
         CompletableFuture<WarpData> completableFuture = new CompletableFuture<>();
 
-        if (data.getWarps().size() == 0) {
+        if (data.getWarps().isEmpty()) {
             completableFuture.complete(null);
             return completableFuture;
         }
