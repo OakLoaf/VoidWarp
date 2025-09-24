@@ -53,7 +53,7 @@ public class ConfigManager {
                         data = new BounceMode.BounceModeData(locationName, location, speed);
                     }
 
-                    case COMMAND -> {
+                    case COMMAND, PLAYER_COMMAND -> {
                         String locationName = configurationSection.getString("name");
                         List<String> commands = configurationSection.getStringList("commands");
 

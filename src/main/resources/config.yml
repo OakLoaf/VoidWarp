@@ -3,7 +3,7 @@
 ############################
 
 world:
-  # mode: The warp mode to use when the player is in the region (COMMAND/LOCATION/SPAWN/WARP)
+  # mode: The warp mode to use when the player is in the region (COMMAND/LOCATION/PLAYER_COMMAND/SPAWN/WARP)
   mode: SPAWN
   # yMin: The Y coordinate at the bottom of the range (Leave empty to have no minimum)
   yMin: -1000
@@ -19,3 +19,11 @@ world_warp_example:
   message: "&#b7faa2Teleported to &#66b04f%location%"
   warps: []
   whitelist: false
+
+command_example:
+  mode: COMMAND
+  yMin: -1000
+  yMax: 0
+  message: "&7Teleported to &eWorld&7."
+  commands:
+    - "tp %player% 0 65 0",
