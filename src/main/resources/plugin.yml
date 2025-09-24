@@ -1,8 +1,7 @@
 name: VoidWarp
 version: ${project.version}
-main: me.dave.voidwarp.VoidWarp
+main: org.lushplugins.voidwarp.VoidWarp
 api-version: 1.16
-authors: [ Dav_e_ ]
 description: Teleports you to a specific location, runs a command or warps you to the nearest warp when you go above or below a specified Y level.
 softdepend:
   - Essentials

@@ -1,37 +1,44 @@
 plugins {
-    java
-    `maven-publish`
-    id("com.github.johnrengelman.shadow") version("8.1.1")
+    `java-library`
+    id("com.gradleup.shadow") version("8.3.0")
+    id("xyz.jpenilla.run-paper") version("2.2.4")
 }
 
-group = "me.dave"
-version = "1.1.0-BETA"
+group = "org.lushplugins"
+version = "2.0.0"
 
 repositories {
-    mavenCentral()
     mavenLocal()
-    maven { url = uri("https://oss.sonatype.org/content/repositories/snapshots/") }
-    maven { url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") }
-    maven { url = uri("https://ci.ender.zone/plugin/repository/everything/") }
-    maven { url = uri("https://maven.enginehub.org/repo/") }
-    maven { url = uri("https://jitpack.io") }
+    mavenCentral()
+    maven("https://oss.sonatype.org/content/repositories/snapshots/")
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/") // Spigot
+    maven("https://repo.lushplugins.org/releases/") // ChatColorHandler
+    maven("https://ci.ender.zone/plugin/repository/everything/")
+    maven("https://maven.enginehub.org/repo/") // WorldGuard
+    maven("https://repo.nightexpressdev.com/releases") // nightcore
+    maven("https://jitpack.io") // SunLight
 }
 
 dependencies {
-    compileOnly("org.spigotmc:spigot-api:1.20-R0.1-SNAPSHOT")
+    // Dependencies
+    compileOnly("org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT")
+
+    // Soft Dependencies
     compileOnly("net.ess3:EssentialsX:2.18.1")
     compileOnly("net.ess3:EssentialsXSpawn:2.18.1")
     compileOnly("net.william278:HuskHomes2:4.1.1")
     compileOnly("com.github.CodingAir:WarpSystem-API:5.1.6")
     compileOnly("com.github.CodingAir:CodingAPI:1.64")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.9")
-    compileOnly(files("libs/SunLight-3.9.6.jar"))
-    compileOnly("su.nexmedia:NexEngine:2.2.12")
-    implementation("com.github.CoolDCB:ChatColorHandler:v2.2.0")
+    compileOnly(files("libs/SunLight-3.14.0.jar"))
+    compileOnly("su.nightexpress.nightcore:main:2.7.18")
+
+    // Libraries
+    implementation("org.lushplugins:ChatColorHandler:5.1.6")
 }
 
 java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 tasks {
@@ -40,19 +47,25 @@ tasks {
     }
 
     shadowJar {
-        relocate("me.dave.chatcolorhandler", "me.dave.voidwarp.libraries.chatcolor")
+        minimize()
 
-        val folder = System.getenv("pluginFolder_1-20")
-        if (folder != null) destinationDirectory.set(file(folder))
+        relocate("org.lushplugins.chatcolorhandler", "org.lushplugins.voidwarp.libraries.chatcolor")
+
         archiveFileName.set("${project.name}-${project.version}.jar")
     }
 
     processResources{
-        expand(project.properties)
+        filesMatching("plugin.yml") {
+            expand(project.properties)
+        }
 
         inputs.property("version", rootProject.version)
         filesMatching("plugin.yml") {
             expand("version" to rootProject.version)
         }
+    }
+
+    runServer {
+        minecraftVersion("1.21.8")
     }
 }
