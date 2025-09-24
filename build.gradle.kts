@@ -26,7 +26,7 @@ dependencies {
     // Soft Dependencies
     compileOnly("net.ess3:EssentialsX:2.18.1")
     compileOnly("net.ess3:EssentialsXSpawn:2.18.1")
-    compileOnly("net.william278:HuskHomes2:4.1.1")
+    compileOnly("net.william278:HuskHomes2:4.9.9")
     compileOnly("com.github.CodingAir:WarpSystem-API:5.1.6")
     compileOnly("com.github.CodingAir:CodingAPI:1.64")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.14")
