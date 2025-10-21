@@ -34,7 +34,7 @@ dependencies {
     compileOnly("su.nightexpress.nightcore:main:2.9.0")
 
     // Libraries
-    implementation("org.lushplugins:ChatColorHandler:6.0.2")
+    implementation("org.lushplugins:ChatColorHandler:6.0.3")
 }
 
 java {
