@@ -21,7 +21,7 @@ repositories {
 
 dependencies {
     // Dependencies
-    compileOnly("org.spigotmc:spigot-api:1.21.8-R0.1-SNAPSHOT")
+    compileOnly("org.spigotmc:spigot-api:1.21.11-R0.2-SNAPSHOT")
 
     // Soft Dependencies
     compileOnly("net.ess3:EssentialsX:2.18.1")
