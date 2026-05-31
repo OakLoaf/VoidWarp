@@ -28,7 +28,7 @@ dependencies {
     compileOnly("net.ess3:EssentialsXSpawn:2.18.1")
     compileOnly("net.william278:HuskHomes2:4.9.9")
     compileOnly("com.github.CodingAir:WarpSystem-API:5.1.6")
-    compileOnly("com.github.CodingAir:CodingAPI:1.101")
+    compileOnly("com.github.CodingAir:CodingAPI:1.102")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.16")
     compileOnly(files("libs/SunLight-3.14.0.jar"))
     compileOnly("su.nightexpress.nightcore:main:2.15.3")
