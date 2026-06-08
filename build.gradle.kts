@@ -31,7 +31,7 @@ dependencies {
     compileOnly("com.github.CodingAir:CodingAPI:1.102")
     compileOnly("com.sk89q.worldguard:worldguard-bukkit:7.0.16")
     compileOnly(files("libs/SunLight-3.14.0.jar"))
-    compileOnly("su.nightexpress.nightcore:main:2.15.3")
+    compileOnly("su.nightexpress.nightcore:main:2.16.1")
 
     // Libraries
     implementation("org.lushplugins:ChatColorHandler:6.0.4")
